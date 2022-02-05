@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 import { toTitleCase } from '../utils/toTitleCase';
 import Listing from '../components/Listing';
 import useQuery from '../utils/useQuery';
-import { Listing as ListingDocument } from '../models/Listing';
+import { Listing as ListingDocument, ListingWithId } from '../models/Listing';
 
 export default function View() {
     const router = useRouter();
@@ -14,7 +14,7 @@ export default function View() {
         data = [],
         error,
         isLoading,
-    } = useQuery<ListingDocument>('/api/listing/list');
+    } = useQuery<ListingWithId[]>('/api/listing/list');
     const [subject, setSubject] = React.useState('');
 
     const handleChangeSubject = (nxt: string) => {

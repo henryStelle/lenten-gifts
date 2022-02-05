@@ -6,7 +6,6 @@ export default async function connectToMongo() {
     }
     try {
         await connect(process.env.MONGO_URI);
-        console.log('connected to mongodb!');
     } catch (err) {
         return console.log(err);
     }

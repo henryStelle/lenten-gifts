@@ -4,9 +4,15 @@ import connectToMongo from '../../../utils/connectToMongo';
 
 export default async function list(req: NextApiRequest, res: NextApiResponse) {
     try {
+        if (!req.query.id) throw new Error('Listing Id required.');
         await connectToMongo();
-        const listings = await ListingModel.find({ isAvailable: true });
-        res.status(200).send(listings.map((listing) => listing.toObject()));
+        const listing = await ListingModel.findById(req.query.id);
+        if (listing) {
+            // setTimeout(() => res.status(200).send(listing.toObject()), 5000);
+            res.status(200).send(listing.toObject());
+        } else {
+            res.status(404).end();
+        }
     } catch (err) {
         console.log(err);
         res.status(500).end();

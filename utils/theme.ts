@@ -31,6 +31,9 @@ const theme = createTheme({
                         '&:hover': { backgroundColor: '#696969' },
                     },
                 },
+                body: {
+                    overscrollBehavior: 'none',
+                },
             },
         },
     },

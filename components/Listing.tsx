@@ -9,9 +9,9 @@ import {
     CardActions,
     Button,
 } from '@mui/material';
-import { Listing as ListingProps } from '../models/Listing';
+import { ListingWithId } from '../models/Listing';
 
-export default function Listing(props: ListingProps) {
+export default function Listing(props: ListingWithId) {
     const [hover, setHover] = React.useState(false);
     return (
         <Grid

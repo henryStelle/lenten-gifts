@@ -13,10 +13,15 @@ export interface Listing {
     phone: string;
 }
 
+export interface ListingWithId extends Listing {
+    _id: string;
+}
+
 const ListingSchema = new Schema<Listing>({
     name: {
         required: true,
         type: String,
+        minlength: 5,
         trim: true,
     },
     type: {
@@ -31,6 +36,7 @@ const ListingSchema = new Schema<Listing>({
     title: {
         required: true,
         type: String,
+        minlength: 5,
         trim: true,
     },
     description: {
@@ -54,7 +60,8 @@ const ListingSchema = new Schema<Listing>({
         type: String,
         trim: true,
         validate: {
-            validator: (email: string) => isMobilePhone(email),
+            validator: (phone: string) =>
+                isMobilePhone(phone, 'any', { strictMode: true }),
             message: '{VALUE} is an invalid phone number',
         },
     },
