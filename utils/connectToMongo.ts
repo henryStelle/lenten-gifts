@@ -5,7 +5,8 @@ export default async function connectToMongo() {
         throw new Error('The MONGO_URI env has not been set');
     }
     try {
-        return await connect(process.env.MONGO_URI);
+        await connect(process.env.MONGO_URI);
+        console.log('connected to mongodb!');
     } catch (err) {
         return console.log(err);
     }
