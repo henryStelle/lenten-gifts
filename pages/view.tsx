@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 import { toTitleCase } from '../utils/toTitleCase';
 import Listing from '../components/Listing';
 import useQuery from '../utils/useQuery';
-import { Listing as ListingDocument, ListingWithId } from '../models/Listing';
+import { ListingWithId } from '../models/Listing';
 import { singularize } from '../utils/singularize';
 
 export default function View() {
@@ -35,10 +35,7 @@ export default function View() {
     }, [router]);
 
     return (
-        <Layout title={subject ? `View ${toTitleCase(subject)}` : 'View'}>
-            {/* <Typography variant="h3" gutterBottom>
-        View {toTitleCase(subject)}
-      </Typography> */}
+        <Layout title={subject ? `View ${toTitleCase(subject + 's')}` : 'View'}>
             <Paper>
                 <Tabs
                     value={subject}
