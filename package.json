@@ -1,29 +1,36 @@
 {
-  "private": true,
-  "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "type-check": "tsc"
-  },
-  "dependencies": {
-    "@emotion/cache": "^11.7.1",
-    "@emotion/react": "^11.7.1",
-    "@emotion/server": "^11.4.0",
-    "@emotion/styled": "^11.6.0",
-    "@mui/material": "^5.4.0",
-    "mongoose": "^6.1.10",
-    "next": "latest",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "swr": "^1.2.1",
-    "validator": "^13.7.0"
-  },
-  "devDependencies": {
-    "@types/node": "^12.12.21",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
-    "@types/validator": "^13.7.1",
-    "typescript": "^4.5.5"
-  }
+    "private": true,
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start",
+        "prettier:fix": "prettier --write components/ models/ pages/ utils/",
+        "lint:fix": "eslint components/ models/ pages/ utils/ --fix",
+        "lint:all": "yarn prettier:fix && yarn lint:fix",
+        "type-check": "tsc"
+    },
+    "dependencies": {
+        "@emotion/cache": "^11.7.1",
+        "@emotion/react": "^11.7.1",
+        "@emotion/server": "^11.4.0",
+        "@emotion/styled": "^11.6.0",
+        "@mui/material": "^5.4.0",
+        "mongoose": "^6.1.10",
+        "next": "latest",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "swr": "^1.2.1",
+        "validator": "^13.7.0"
+    },
+    "devDependencies": {
+        "@types/node": "^12.12.21",
+        "@types/react": "^17.0.2",
+        "@types/react-dom": "^17.0.1",
+        "@types/validator": "^13.7.1",
+        "eslint": "8.8.0",
+        "eslint-config-next": "12.0.10",
+        "eslint-config-prettier": "^8.3.0",
+        "prettier": "^2.5.1",
+        "typescript": "^4.5.5"
+    }
 }
