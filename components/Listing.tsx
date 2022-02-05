@@ -2,8 +2,6 @@ import React from 'react';
 import {
     Grid,
     Card,
-    CardHeader,
-    CardMedia,
     CardContent,
     Typography,
     CardActions,
@@ -24,15 +22,18 @@ export default function Listing(props: ListingWithId) {
         >
             <Card>
                 {/* <CardHeader title={props.title} subheader={props.name} /> */}
-                <CardMedia
+                {/* <CardMedia
                     component={'img'}
                     height={140}
                     image={'https://source.unsplash.com/random'}
                     alt={props.description}
-                />
+                /> */}
                 <CardContent onMouseEnter={() => setHover(true)}>
+                    <Typography variant='body1'>
+                        <strong>{props.title}</strong>
+                    </Typography>
                     <Typography variant='body1' gutterBottom>
-                        {props.title}
+                        {props.name}
                     </Typography>
                     {/* <Typography variant="body1" gutterBottom>
             {props.name}
