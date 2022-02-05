@@ -13,7 +13,7 @@ export default function NavBar() {
                 <Button
                     color={'secondary'}
                     variant='outlined'
-                    onClick={() => router.push('/')}
+                    onClick={() => router.push('/view?v=gift')}
                     sx={{ marginRight: 2 }}
                 >
                     View Gifts
@@ -21,7 +21,7 @@ export default function NavBar() {
                 <Button
                     color={'secondary'}
                     variant='contained'
-                    onClick={() => router.push('/gift')}
+                    onClick={() => router.push('/offer/gift')}
                 >
                     Offer Gift
                 </Button>

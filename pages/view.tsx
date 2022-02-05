@@ -6,6 +6,7 @@ import { toTitleCase } from '../utils/toTitleCase';
 import Listing from '../components/Listing';
 import useQuery from '../utils/useQuery';
 import { Listing as ListingDocument, ListingWithId } from '../models/Listing';
+import { singularize } from '../utils/singularize';
 
 export default function View() {
     const router = useRouter();
@@ -29,7 +30,7 @@ export default function View() {
             router.asPath.includes('v=') == !!router.query.v &&
             !subject
         ) {
-            handleChangeSubject(router.query.v?.toString() || 'gifts');
+            handleChangeSubject(router.query.v?.toString() || 'gift');
         }
     }, [router]);
 
@@ -46,8 +47,8 @@ export default function View() {
                         handleChangeSubject(nextSubject)
                     }
                 >
-                    <Tab value={'gifts'} label={'Gifts'} />
-                    <Tab value={'groups'} label={'Groups'} />
+                    <Tab value={'gift'} label={'Gifts'} />
+                    <Tab value={'group'} label={'Groups'} />
                 </Tabs>
             </Paper>
             <div style={{ height: 24 }} />
@@ -57,7 +58,7 @@ export default function View() {
             {isLoading && <Typography align={'center'}>Loading...</Typography>}
             <Grid container spacing={3}>
                 {data
-                    .filter(({ type }) => type == subject)
+                    .filter(({ type }) => type == singularize(subject))
                     .map((gift) => (
                         <Listing key={gift._id} {...gift} />
                     ))}

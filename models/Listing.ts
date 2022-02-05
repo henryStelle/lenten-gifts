@@ -26,7 +26,7 @@ const ListingSchema = new Schema<Listing>({
     },
     type: {
         required: true,
-        enum: ['gifts', 'groups'],
+        enum: ['gift', 'group'],
         type: String,
     },
     isAvailable: {
