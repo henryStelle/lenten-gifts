@@ -7,11 +7,7 @@ export default function NavBar() {
   return (
     <AppBar>
       <Toolbar>
-        <Typography
-          variant="h6"
-          sx={{ flexGrow: 1 }}
-          onClick={() => router.push("/")}
-        >
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Lenten Giving
         </Typography>
         <Button

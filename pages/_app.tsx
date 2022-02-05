@@ -8,6 +8,7 @@ import createEmotionCache from "../utils/createEmotionCache";
 import NavBar from "../components/NavBar";
 import { Toolbar } from "@mui/material";
 import { AppProps } from "next/app";
+import Footer from "../components/Footer";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -26,8 +27,11 @@ export default function MyApp(
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <NavBar />
+        {/* this div provides a little extra padding below the navbar */}
+        <div style={{ height: 20 }} />
         <Toolbar />
         <Component {...pageProps} />
+        <Footer />
       </ThemeProvider>
     </CacheProvider>
   );

@@ -1,15 +1,12 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { GetServerSideProps } from "next";
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+export default function Home() {
+  return <p>The home page doesn't exist.</p>;
+}
 
-export default IndexPage
+export const getServerSideProps: GetServerSideProps = async () => ({
+  redirect: {
+    destination: "/view",
+    permanent: false,
+  },
+});
