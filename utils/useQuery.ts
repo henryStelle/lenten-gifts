@@ -6,10 +6,10 @@ async function fetcher(args: RequestInfo) {
   return await res.json();
 }
 
-export default function useQuery(url: string) {
+export default function useQuery<T>(url: string) {
   const { data, error, isValidating } = useSWR(url, fetcher);
   return {
-    data: isValidating ? undefined : data,
+    data: isValidating ? undefined : (data as (T & { _id: string })[]),
     error: isValidating ? undefined : error,
     isLoading: isValidating,
   };

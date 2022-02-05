@@ -9,8 +9,9 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
+import { Listing as ListingProps } from "../models/Listing";
 
-export default function Listing(props: any) {
+export default function Listing(props: ListingProps) {
   const [hover, setHover] = React.useState(false);
   return (
     <Grid
@@ -46,8 +47,10 @@ export default function Listing(props: any) {
           </div>
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button>Phone</Button>
-          <Button variant="outlined">Email</Button>
+          <Button href={`tel:${props.phone}`}>Phone</Button>
+          <Button variant="outlined" href={`mailto:${props.email}`}>
+            Email
+          </Button>
         </CardActions>
       </Card>
     </Grid>
