@@ -3,10 +3,10 @@ import Head from 'next/head';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
-import theme from '../utils/theme';
+import { generate } from '../utils/theme';
 import createEmotionCache from '../utils/createEmotionCache';
 import NavBar from '../components/NavBar';
-import { Toolbar } from '@mui/material';
+import { Toolbar, useMediaQuery } from '@mui/material';
 import { AppProps } from 'next/app';
 import Footer from '../components/Footer';
 import AlertContext, { reducer } from '../contexts/Alert';
@@ -24,6 +24,11 @@ export default function MyApp(
         pageProps,
     } = props;
 
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const theme = React.useMemo(
+        () => generate(prefersDarkMode),
+        [prefersDarkMode]
+    );
     const [alert, dispatch] = React.useReducer(reducer, {
         message: '',
         severity: 'success',

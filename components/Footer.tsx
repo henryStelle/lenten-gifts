@@ -3,7 +3,7 @@ import {
     Grid,
     Typography,
     Link,
-    Box,
+    Paper,
     useMediaQuery,
 } from '@mui/material';
 
@@ -13,11 +13,10 @@ export default function Footer() {
     return (
         <>
             <div style={{ height: wide_screen ? 70 : 110 }} />
-            <Box
+            <Paper
                 component={'footer'}
                 sx={{
                     paddingY: '2vh',
-                    bgcolor: 'background.paper',
                     position: 'absolute',
                     bottom: 0,
                     width: '100%',
@@ -45,7 +44,7 @@ export default function Footer() {
                         </Grid>
                     </Grid>
                 </Container>
-            </Box>
+            </Paper>
         </>
     );
 }

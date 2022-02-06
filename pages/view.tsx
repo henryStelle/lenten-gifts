@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Tabs, Tab, Paper, Grid } from '@mui/material';
+import { Typography, Tabs, Tab, Paper, Grid, useTheme } from '@mui/material';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { toTitleCase } from '../utils/toTitleCase';
@@ -10,6 +10,7 @@ import { singularize } from '../utils/singularize';
 
 export default function View() {
     const router = useRouter();
+    const theme = useTheme();
 
     const {
         data = [],
@@ -43,6 +44,9 @@ export default function View() {
                     onChange={(_, nextSubject) =>
                         handleChangeSubject(nextSubject)
                     }
+                    // textColor={
+                    //     theme.palette.mode == 'dark' ? 'secondary' : 'primary'
+                    // }
                 >
                     <Tab value={'gift'} label={'Gifts'} />
                     <Tab value={'group'} label={'Groups'} />

@@ -1,12 +1,10 @@
-import { GetServerSideProps } from 'next';
+import React from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-    return <p>The home page doesn't exist.</p>;
+    const router = useRouter();
+    React.useEffect(() => {
+        router.replace('/view');
+    }, [router]);
+    return null;
 }
-
-export const getServerSideProps: GetServerSideProps = async () => ({
-    redirect: {
-        destination: '/view',
-        permanent: false,
-    },
-});
