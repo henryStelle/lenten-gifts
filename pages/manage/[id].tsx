@@ -11,6 +11,7 @@ import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
 import { singularize } from '../../utils/singularize';
 import AlertContext from '../../contexts/Alert';
+import isURL from 'validator/lib/isURL';
 
 export default function Manage() {
     const router = useRouter();
@@ -166,6 +167,20 @@ export default function Manage() {
                                 helperText:
                                     'More specific details regarding the ' +
                                     singularize(data?.type),
+                            }}
+                        />
+                        <HookTextField<ListingWithId>
+                            control={control}
+                            errors={formState.errors}
+                            name={'image'}
+                            mui={{
+                                helperText:
+                                    'The url of the image related to your listing',
+                            }}
+                            rules={{
+                                validate: (url) =>
+                                    isURL(url as string) ||
+                                    "The image's URL must be valid",
                             }}
                         />
                         <HookTextField<ListingWithId>
