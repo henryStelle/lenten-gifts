@@ -4,8 +4,8 @@
         "dev": "next",
         "build": "next build",
         "start": "next start",
-        "prettier:fix": "prettier --write components/ models/ pages/ utils/",
-        "lint:fix": "eslint components/ models/ pages/ utils/ --fix",
+        "prettier:fix": "prettier --write components/ models/ pages/ utils/ contexts/",
+        "lint:fix": "eslint components/ models/ pages/ utils/ contexts/ --fix",
         "lint:all": "yarn prettier:fix && yarn lint:fix",
         "type-check": "tsc"
     },
