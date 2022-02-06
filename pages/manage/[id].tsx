@@ -1,9 +1,8 @@
 import React from 'react';
-import { Typography, Button, Skeleton } from '@mui/material';
+import { Typography, Button, Skeleton, TextField } from '@mui/material';
 import { ListingWithId } from '../../models/Listing';
 import useQuery from '../../utils/useQuery';
 import Layout from '../../components/Layout';
-import { useSWRConfig } from 'swr';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../components/HookTextField';
 import isMobilePhone from 'validator/lib/isMobilePhone';
@@ -17,13 +16,20 @@ export default function Manage() {
     const router = useRouter();
     const id = router.query.id as string | undefined;
     const dispatch = React.useContext(AlertContext);
+    const [password, setPassword] = React.useState('');
 
     const { control, handleSubmit, reset, formState } = useForm<ListingWithId>({
         mode: 'onTouched',
     });
-    const { mutate } = useSWRConfig();
-    const { data, error, isLoading } = useQuery<ListingWithId>(
-        `/api/listing/${id}`
+    const { data, error, isLoading, mutate } = useQuery<ListingWithId>(
+        `/api/listing/${id}`,
+        {
+            headers: {
+                Authorization:
+                    'Basic ' +
+                    Buffer.from(':' + password, 'utf-8').toString('base64'),
+            },
+        }
     );
 
     React.useEffect(() => {
@@ -69,7 +75,6 @@ export default function Manage() {
                 });
                 return result;
             } else {
-                console.log(result, response);
                 dispatch({
                     type: 'open',
                     payload: { message: result.message, severity: 'error' },
@@ -87,9 +92,42 @@ export default function Manage() {
         const body = { ...data, isAvailable: !data?.isAvailable };
         const result = await handleApiRequest(body);
         if (result) {
-            mutate(`/api/listing/${id}`, result, false);
+            mutate(`/api/listing/${id}`, result);
         }
     };
+
+    if (error?.toString()?.includes('403')) {
+        return (
+            <Layout title='Sign In'>
+                <Typography variant='h4'>Please Sign In</Typography>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        mutate(`/api/listing/${id}`, true);
+                    }}
+                    style={{ maxWidth: 400, width: '100%' }}
+                >
+                    <TextField
+                        label={'Password'}
+                        type={'password'}
+                        fullWidth
+                        size={'small'}
+                        margin={'normal'}
+                        value={password}
+                        autoComplete={'current-password'}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <Button
+                        variant='contained'
+                        disabled={!password}
+                        type={'submit'}
+                    >
+                        Sign In
+                    </Button>
+                </form>
+            </Layout>
+        );
+    }
 
     return (
         <Layout title={'Manage Listing'}>
@@ -173,6 +211,7 @@ export default function Manage() {
                             control={control}
                             errors={formState.errors}
                             name={'image'}
+                            defaultValue={''}
                             mui={{
                                 helperText:
                                     'The url of the image related to your listing',

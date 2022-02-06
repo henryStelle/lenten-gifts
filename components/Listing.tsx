@@ -8,6 +8,7 @@ import {
     Button,
     Link,
     CardMedia,
+    CardHeader,
 } from '@mui/material';
 import { ListingWithId } from '../models/Listing';
 
@@ -23,7 +24,11 @@ export default function Listing(props: ListingWithId) {
             onMouseLeave={() => setHover(false)}
         >
             <Card>
-                {/* <CardHeader title={props.title} subheader={props.name} /> */}
+                <CardHeader
+                    title={props.title}
+                    subheader={props.name}
+                    titleTypographyProps={{ variant: 'body1' }}
+                />
                 {props.image && (
                     <CardMedia
                         component={'img'}
@@ -33,12 +38,12 @@ export default function Listing(props: ListingWithId) {
                     />
                 )}
                 <CardContent onMouseEnter={() => setHover(true)}>
-                    <Typography variant='body1'>
+                    {/* <Typography variant='body1'>
                         <strong>{props.title}</strong>
                     </Typography>
                     <Typography variant='body1' gutterBottom>
                         {props.name}
-                    </Typography>
+                    </Typography> */}
                     <div
                         style={{
                             maxHeight: hover ? 200 : 100,
@@ -54,8 +59,11 @@ export default function Listing(props: ListingWithId) {
                         </Link>
                     </div>
                 </CardContent>
-                <CardActions sx={{ justifyContent: 'flex-end' }}>
-                    <Button href={`tel:${props.phone}`}>Phone</Button>
+                <CardActions>
+                    <Button href={`/manage/${props._id}`} target={'_blank'}>
+                        Edit
+                    </Button>
+                    <div style={{ flexGrow: 1 }} />
                     <Button variant='outlined' href={`mailto:${props.email}`}>
                         Email
                     </Button>

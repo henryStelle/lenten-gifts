@@ -75,7 +75,6 @@ export default function Create() {
 
     const onSubmit: SubmitHandler<ListingWithId> = async (body) => {
         try {
-            console.log(body);
             const response = await fetch('/api/listing/post', {
                 method: 'POST',
                 headers: {
@@ -94,7 +93,6 @@ export default function Create() {
                 });
                 router.push(`/manage/${result._id}`);
             } else {
-                console.log(result, response);
                 dispatch({
                     type: 'open',
                     payload: { message: result.message, severity: 'error' },
@@ -149,6 +147,7 @@ export default function Create() {
                             mui={{
                                 helperText: 'Your full name',
                                 fullWidth: true,
+                                autoComplete: 'name',
                             }}
                             defaultValue={''}
                             rules={{
@@ -215,6 +214,7 @@ export default function Create() {
                             mui={{
                                 helperText: 'Your phone number',
                                 fullWidth: true,
+                                autoComplete: 'tel',
                             }}
                             defaultValue={''}
                             rules={{
@@ -230,12 +230,32 @@ export default function Create() {
                             mui={{
                                 helperText: 'Your email address',
                                 fullWidth: true,
+                                autoComplete: 'email',
                             }}
                             defaultValue={''}
                             rules={{
                                 validate: (str) =>
                                     isEmail(str as string) ||
                                     'A valid email address must be entered',
+                            }}
+                        />
+                        <HookTextField<ListingWithId>
+                            control={control}
+                            errors={formState.errors}
+                            name={'password'}
+                            mui={{
+                                helperText: 'Your password',
+                                fullWidth: true,
+                                type: 'password',
+                                autoComplete: 'new-password',
+                            }}
+                            defaultValue={''}
+                            rules={{
+                                minLength: {
+                                    value: 8,
+                                    message:
+                                        'Your password must be at least 8 characters',
+                                },
                             }}
                         />
                     </Grid>
