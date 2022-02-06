@@ -1,32 +1,21 @@
 import React from 'react';
-import {
-    Typography,
-    Button,
-    Skeleton,
-    Snackbar,
-    Alert,
-    AlertColor,
-} from '@mui/material';
+import { Typography, Button, Skeleton } from '@mui/material';
 import { ListingWithId } from '../../models/Listing';
 import useQuery from '../../utils/useQuery';
 import Layout from '../../components/Layout';
-import { GetServerSidePropsContext } from 'next';
 import { useSWRConfig } from 'swr';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../components/HookTextField';
 import isMobilePhone from 'validator/lib/isMobilePhone';
 import isEmail from 'validator/lib/isEmail';
+import { useRouter } from 'next/router';
+import { singularize } from '../../utils/singularize';
+import AlertContext from '../../contexts/Alert';
 
-interface Alert {
-    message: string;
-    severity: AlertColor;
-}
-
-export default function Manage({ id }: { id: string }) {
-    const [alert, setAlert] = React.useState<Alert>({
-        message: '',
-        severity: 'success',
-    });
+export default function Manage() {
+    const router = useRouter();
+    const id = router.query.id as string | undefined;
+    const dispatch = React.useContext(AlertContext);
 
     const { control, handleSubmit, reset, formState } = useForm<ListingWithId>({
         mode: 'onTouched',
@@ -48,11 +37,14 @@ export default function Manage({ id }: { id: string }) {
 
     const onSubmitError: SubmitErrorHandler<ListingWithId> = (form) => {
         const count = Object.keys(form).length;
-        setAlert({
-            message: `There ${count == 1 ? 'is' : 'are'} ${count} error${
-                count == 1 ? '' : 's'
-            } with your form.`,
-            severity: 'error',
+        dispatch({
+            type: 'open',
+            payload: {
+                message: `There ${count == 1 ? 'is' : 'are'} ${count} error${
+                    count == 1 ? '' : 's'
+                } with your form.`,
+                severity: 'error',
+            },
         });
     };
 
@@ -67,16 +59,25 @@ export default function Manage({ id }: { id: string }) {
             });
             const result = await response.json();
             if (response.ok) {
-                setAlert({ message: 'Listing updated!', severity: 'success' });
+                dispatch({
+                    type: 'open',
+                    payload: {
+                        message: 'Listing updated!',
+                        severity: 'success',
+                    },
+                });
                 return result;
             } else {
                 console.log(result, response);
-                setAlert({ message: result.message, severity: 'error' });
+                dispatch({
+                    type: 'open',
+                    payload: { message: result.message, severity: 'error' },
+                });
             }
         } catch (err) {
-            setAlert({
-                message: err as string,
-                severity: 'error',
+            dispatch({
+                type: 'open',
+                payload: { message: err as string, severity: 'error' },
             });
         }
     };
@@ -91,19 +92,13 @@ export default function Manage({ id }: { id: string }) {
 
     return (
         <Layout title={'Manage Listing'}>
-            <Snackbar
-                open={alert.message.length > 0}
-                anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-                onClose={() => setAlert((prev) => ({ ...prev, message: '' }))}
-            >
-                <Alert severity={alert.severity}>{alert.message}</Alert>
-            </Snackbar>
             <Typography variant='h4'>
                 {isLoading ? <Skeleton /> : `Hi, ${data?.name}!`}
             </Typography>
             <Typography sx={{ marginBottom: 4 }}>
                 This page allows you to edit your listing or mark it as no
-                longer available.
+                longer available. It is recommended that you bookmark this page
+                to ensure you are able to find it later.
             </Typography>
 
             {error && (
@@ -160,10 +155,7 @@ export default function Manage({ id }: { id: string }) {
                             mui={{
                                 helperText:
                                     'The title or summary of the ' +
-                                    data?.type.substring(
-                                        0,
-                                        data?.type.length - 1
-                                    ),
+                                    singularize(data?.type),
                             }}
                         />
                         <HookTextField<ListingWithId>
@@ -173,10 +165,7 @@ export default function Manage({ id }: { id: string }) {
                             mui={{
                                 helperText:
                                     'More specific details regarding the ' +
-                                    data?.type.substring(
-                                        0,
-                                        data?.type.length - 1
-                                    ),
+                                    singularize(data?.type),
                             }}
                         />
                         <HookTextField<ListingWithId>
@@ -209,11 +198,3 @@ export default function Manage({ id }: { id: string }) {
         </Layout>
     );
 }
-
-export const getServerSideProps = async (
-    context: GetServerSidePropsContext
-) => {
-    return {
-        props: context.params || null,
-    };
-};

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Typography, Button, Snackbar, Alert, AlertColor } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import { ListingWithId } from '../../models/Listing';
 import Layout from '../../components/Layout';
-import { GetServerSidePropsContext } from 'next';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../components/HookTextField';
 import isMobilePhone from 'validator/lib/isMobilePhone';
@@ -10,27 +9,23 @@ import isEmail from 'validator/lib/isEmail';
 import { toTitleCase } from '../../utils/toTitleCase';
 import { singularize } from '../../utils/singularize';
 import { useRouter } from 'next/router';
+import AlertContext from '../../contexts/Alert';
 
-interface Alert {
-    message: string;
-    severity: AlertColor;
-}
-
-export default function Create({ type }: { type: string }) {
+export default function Create() {
     const [isLoading, setIsLoading] = React.useState(false);
-    const [alert, setAlert] = React.useState<Alert>({
-        message: '',
-        severity: 'success',
-    });
+    const dispatch = React.useContext(AlertContext);
 
     const router = useRouter();
-    const { control, handleSubmit, formState, register } =
+    const type = router.query.type as string | undefined;
+
+    const { control, handleSubmit, formState, register, setValue } =
         useForm<ListingWithId>({
             mode: 'onTouched',
         });
 
     const onSubmit: SubmitHandler<ListingWithId> = async (body) => {
         try {
+            console.log(body);
             const response = await fetch('/api/listing/post', {
                 method: 'POST',
                 headers: {
@@ -40,39 +35,48 @@ export default function Create({ type }: { type: string }) {
             });
             const result = await response.json();
             if (response.ok) {
-                setAlert({ message: 'Listing created!', severity: 'success' });
+                dispatch({
+                    type: 'open',
+                    payload: {
+                        message: 'Listing updated!',
+                        severity: 'success',
+                    },
+                });
                 router.push(`/manage/${result._id}`);
             } else {
                 console.log(result, response);
-                setAlert({ message: result.message, severity: 'error' });
+                dispatch({
+                    type: 'open',
+                    payload: { message: result.message, severity: 'error' },
+                });
             }
         } catch (err) {
-            setAlert({
-                message: err as string,
-                severity: 'error',
+            dispatch({
+                type: 'open',
+                payload: { message: err as string, severity: 'error' },
             });
         }
     };
 
     const onSubmitError: SubmitErrorHandler<ListingWithId> = (form) => {
         const count = Object.keys(form).length;
-        setAlert({
-            message: `There ${count == 1 ? 'is' : 'are'} ${count} error${
-                count == 1 ? '' : 's'
-            } with your form.`,
-            severity: 'error',
+        dispatch({
+            type: 'open',
+            payload: {
+                message: `There ${count == 1 ? 'is' : 'are'} ${count} error${
+                    count == 1 ? '' : 's'
+                } with your form.`,
+                severity: 'error',
+            },
         });
     };
 
+    React.useEffect(() => {
+        if (type) setValue('type', type);
+    }, [type, setValue]);
+
     return (
         <Layout title={'Manage Listing'}>
-            <Snackbar
-                open={alert.message.length > 0}
-                anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-                onClose={() => setAlert((prev) => ({ ...prev, message: '' }))}
-            >
-                <Alert severity={alert.severity}>{alert.message}</Alert>
-            </Snackbar>
             <Typography variant='h4' gutterBottom>
                 Sign up to offer a {singularize(type)}
             </Typography>
@@ -83,7 +87,7 @@ export default function Create({ type }: { type: string }) {
             >
                 <input
                     type={'hidden'}
-                    value={singularize(type)}
+                    defaultValue={singularize(type)}
                     {...register('type')}
                 />
                 <HookTextField<ListingWithId>
@@ -122,6 +126,7 @@ export default function Create({ type }: { type: string }) {
                     control={control}
                     errors={formState.errors}
                     name={'description'}
+                    defaultValue={''}
                     mui={{
                         helperText:
                             'More specific details regarding the ' +
@@ -167,11 +172,3 @@ export default function Create({ type }: { type: string }) {
         </Layout>
     );
 }
-
-export const getServerSideProps = async (
-    context: GetServerSidePropsContext
-) => {
-    return {
-        props: context.params || null,
-    };
-};
