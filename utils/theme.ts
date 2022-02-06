@@ -1,9 +1,8 @@
-import { darkScrollbar } from '@mui/material';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 const theme = createTheme({
     palette: {
-        primary: { main: '#3f51b5' },
+        primary: { main: '#0a6047' },
         secondary: { main: '#fff' },
         background: {
             default: '#f7f7f7',
