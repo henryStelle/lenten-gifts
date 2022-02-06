@@ -175,10 +175,8 @@ export default function Manage() {
                             mui={{ helperText: 'Your phone number' }}
                             rules={{
                                 validate: (str) =>
-                                    isMobilePhone(str as string, 'any', {
-                                        strictMode: true,
-                                    }) ||
-                                    'A valid phone number must be entered in the international format: +1 253 456 7899',
+                                    isMobilePhone(str as string) ||
+                                    'A valid phone number must be entered in the North American format: 253 456 7899',
                             }}
                         />
                         <HookTextField<ListingWithId>

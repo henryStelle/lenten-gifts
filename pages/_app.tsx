@@ -25,10 +25,11 @@ export default function MyApp(
     } = props;
 
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const theme = React.useMemo(
-        () => generate(prefersDarkMode),
-        [prefersDarkMode]
-    );
+    // const theme = React.useMemo(
+    //     () => generate(prefersDarkMode),
+    //     [prefersDarkMode]
+    // );
+    const theme = generate(prefersDarkMode);
     const [alert, dispatch] = React.useReducer(reducer, {
         message: '',
         severity: 'success',

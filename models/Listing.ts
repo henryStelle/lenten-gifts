@@ -59,9 +59,9 @@ const ListingSchema = new Schema<Listing>({
         required: true,
         type: String,
         trim: true,
+        set: (phone: string) => (phone.includes('+') ? phone : `+1 ${phone}`),
         validate: {
-            validator: (phone: string) =>
-                isMobilePhone(phone, 'any', { strictMode: true }),
+            validator: (phone: string) => isMobilePhone(phone),
             message: '{VALUE} is an invalid phone number',
         },
     },

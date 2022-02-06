@@ -4,7 +4,7 @@ export function generate(prefersDarkMode: boolean) {
     const theme = createTheme({
         palette: {
             mode: prefersDarkMode ? 'dark' : undefined,
-            primary: { main: prefersDarkMode ? '#7B8750' : '#0a6047' },
+            primary: { main: prefersDarkMode ? '#d9add7' : '#866f85' },
             secondary: { main: '#fff' },
             background: {
                 default: prefersDarkMode ? '#121212' : '#f7f7f7',

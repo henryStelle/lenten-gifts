@@ -6,6 +6,8 @@ import {
     Typography,
     CardActions,
     Button,
+    Link,
+    CardMedia,
 } from '@mui/material';
 import { ListingWithId } from '../models/Listing';
 
@@ -22,12 +24,14 @@ export default function Listing(props: ListingWithId) {
         >
             <Card>
                 {/* <CardHeader title={props.title} subheader={props.name} /> */}
-                {/* <CardMedia
-                    component={'img'}
-                    height={140}
-                    image={'https://source.unsplash.com/random'}
-                    alt={props.description}
-                /> */}
+                {props.image && (
+                    <CardMedia
+                        component={'img'}
+                        height={140}
+                        image={props.image}
+                        alt={props.description}
+                    />
+                )}
                 <CardContent onMouseEnter={() => setHover(true)}>
                     <Typography variant='body1'>
                         <strong>{props.title}</strong>
@@ -35,9 +39,6 @@ export default function Listing(props: ListingWithId) {
                     <Typography variant='body1' gutterBottom>
                         {props.name}
                     </Typography>
-                    {/* <Typography variant="body1" gutterBottom>
-            {props.name}
-          </Typography> */}
                     <div
                         style={{
                             maxHeight: hover ? 200 : 100,
@@ -45,9 +46,12 @@ export default function Listing(props: ListingWithId) {
                             transition: '200ms',
                         }}
                     >
-                        <Typography variant='body2'>
+                        <Typography variant='body2' gutterBottom>
                             {props.description}
                         </Typography>
+                        <Link variant='body2' href={`tel:${props.phone}`}>
+                            {props.phone}
+                        </Link>
                     </div>
                 </CardContent>
                 <CardActions sx={{ justifyContent: 'flex-end' }}>
