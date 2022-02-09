@@ -58,16 +58,9 @@ export default function Create() {
     const [isLoading, setIsLoading] = React.useState(false);
     const dispatch = React.useContext(AlertContext);
     const { data } = useQuery<PhotoSearch>(
-        watch('title')
-            ? `https://api.pexels.com/v1/search?size=small&query=${encodeURIComponent(
-                  watch('title')
-              )}&per_page=6&orientation=landscape`
-            : null,
-        {
-            headers: {
-                Authorization: `Bearer ${process.env.PEXELS_API_KEY}`,
-            },
-        }
+        watch('title')?.length > 4
+            ? `/api/photos?title=${encodeURIComponent(watch('title'))}`
+            : null
     );
 
     const router = useRouter();
@@ -261,7 +254,7 @@ export default function Create() {
                     </Grid>
                     <Grid item xs={12} md={4}>
                         <ImageList
-                            sx={{ width: '100%', height: 410 }}
+                            sx={{ width: '100%', height: 490 }}
                             cols={2}
                             rowHeight={180}
                         >
