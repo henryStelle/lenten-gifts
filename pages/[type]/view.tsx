@@ -32,7 +32,7 @@ export default function View() {
                     <Listing key={gift._id} {...gift} />
                 ))}
             </Grid>
-            {filtered.length == 0 && (
+            {!isLoading && filtered.length == 0 && (
                 <Typography align={'center'}>
                     Unfortunately, no {type + 's'} have been uploaded or are
                     currently being offered.
