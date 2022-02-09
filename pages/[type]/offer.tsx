@@ -7,7 +7,7 @@ import {
     Grid,
     useTheme,
 } from '@mui/material';
-import { ListingWithId } from '../../models/Listing';
+import { Listing, ListingWithId } from '../../models/Listing';
 import Layout from '../../components/Layout';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../components/HookTextField';
@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import AlertContext from '../../contexts/Alert';
 import useQuery from '../../utils/useQuery';
 import isURL from 'validator/lib/isURL';
+import HookCheckBox from '../../components/HookCheckBox';
 
 interface Photo {
     alt: string;
@@ -48,12 +49,19 @@ interface PhotoSearch {
     total_results: number;
 }
 
-export default function Create() {
+export default function Offer() {
     const theme = useTheme();
-    const { control, handleSubmit, formState, register, setValue, watch } =
-        useForm<ListingWithId>({
-            mode: 'onTouched',
-        });
+    const {
+        control,
+        handleSubmit,
+        formState,
+        register,
+        setValue,
+        watch,
+        getValues,
+    } = useForm<ListingWithId>({
+        mode: 'onTouched',
+    });
 
     const [isLoading, setIsLoading] = React.useState(false);
     const dispatch = React.useContext(AlertContext);
@@ -84,7 +92,7 @@ export default function Create() {
                         severity: 'success',
                     },
                 });
-                router.push(`/manage/${result._id}`);
+                router.push(`/${type}/manage/${result._id}`);
             } else {
                 dispatch({
                     type: 'open',
@@ -117,7 +125,7 @@ export default function Create() {
     }, [type, setValue]);
 
     return (
-        <Layout title={'Manage Listing'}>
+        <Layout title={'Create Listing'}>
             <Typography variant='h4' gutterBottom>
                 Sign up to offer a {singularize(type)}
             </Typography>
@@ -135,7 +143,6 @@ export default function Create() {
                     <Grid item xs={12} md={8}>
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'name'}
                             mui={{
                                 helperText: 'Your full name',
@@ -144,6 +151,7 @@ export default function Create() {
                             }}
                             defaultValue={''}
                             rules={{
+                                required: 'Your name is required',
                                 minLength: {
                                     value: 5,
                                     message:
@@ -153,7 +161,6 @@ export default function Create() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'title'}
                             mui={{
                                 helperText:
@@ -163,6 +170,7 @@ export default function Create() {
                             }}
                             defaultValue={''}
                             rules={{
+                                required: 'The title is required',
                                 minLength: {
                                     value: 5,
                                     message: `The title of your ${singularize(
@@ -173,7 +181,6 @@ export default function Create() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'description'}
                             defaultValue={''}
                             mui={{
@@ -184,14 +191,65 @@ export default function Create() {
                             }}
                             rules={{ required: 'A description is required' }}
                         />
+                        {type === 'group' && (
+                            <>
+                                <HookTextField<ListingWithId>
+                                    control={control}
+                                    defaultValue={''}
+                                    name={'meetingDays'}
+                                    mui={{
+                                        label: 'Meeting Days of the Week',
+                                        fullWidth: true,
+                                        helperText:
+                                            'What days of the week you plan on meeting?',
+                                    }}
+                                    rules={{
+                                        required: 'This field is required',
+                                        minLength: {
+                                            value: 3,
+                                            message:
+                                                'Please be more descriptive',
+                                        },
+                                    }}
+                                />
+                                <HookTextField<ListingWithId>
+                                    control={control}
+                                    name={'meetingTime'}
+                                    defaultValue={''}
+                                    mui={{
+                                        fullWidth: true,
+                                        label: 'Meeting Time',
+                                        helperText:
+                                            'What time do you plan on meeting and for how long? If you do not know, just put TBD',
+                                    }}
+                                    rules={{
+                                        required: 'A meeting time is required',
+                                    }}
+                                />
+                                <HookTextField<ListingWithId>
+                                    control={control}
+                                    name={'meetingInterval'}
+                                    mui={{
+                                        fullWidth: true,
+                                        label: 'Meeting Interval',
+                                        helperText:
+                                            'How frequently will you be meeting? Weekly? Every other week? etc.',
+                                    }}
+                                    defaultValue={''}
+                                    rules={{
+                                        required:
+                                            'A meeting interval is required',
+                                    }}
+                                />
+                            </>
+                        )}
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'image'}
                             defaultValue={''}
                             mui={{
                                 helperText:
-                                    'The URL to an image to display with this listing',
+                                    'The URL of an image to display with this listing. Please look to the right or scroll down to see examples, or you may manually enter your own image URL.',
                                 fullWidth: true,
                             }}
                             rules={{
@@ -202,7 +260,6 @@ export default function Create() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'phone'}
                             mui={{
                                 helperText: 'Your phone number',
@@ -218,7 +275,6 @@ export default function Create() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'email'}
                             mui={{
                                 helperText: 'Your email address',
@@ -234,7 +290,6 @@ export default function Create() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'password'}
                             mui={{
                                 helperText: 'Your password',
@@ -253,6 +308,11 @@ export default function Create() {
                         />
                     </Grid>
                     <Grid item xs={12} md={4}>
+                        <Typography align={'center'}>
+                            {watch('title')?.length < 5
+                                ? 'Please enter a title of at least 5 characters to preview images.'
+                                : 'Please click on one of the following images to automatically set your listing image.'}
+                        </Typography>
                         <ImageList
                             sx={{ width: '100%', height: 490 }}
                             cols={2}

@@ -2,25 +2,24 @@ import { TextField, TextFieldProps } from '@mui/material';
 import { Controller, FieldErrors, UseControllerProps } from 'react-hook-form';
 import { toTitleCase } from '../utils/toTitleCase';
 
+interface HookTextFieldProps<T> extends UseControllerProps<T> {
+    mui?: TextFieldProps;
+}
+
 export default function HookTextField<T>({
     mui,
-    errors,
     ...props
-}: UseControllerProps<T> & { mui?: TextFieldProps } & {
-    errors: FieldErrors;
-}) {
+}: HookTextFieldProps<T>) {
     return (
         <Controller
             {...props}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
                 <TextField
                     label={toTitleCase(field.name)}
                     {...mui}
                     {...field}
-                    helperText={
-                        errors?.[props.name]?.message || mui?.helperText
-                    }
-                    error={Boolean(errors?.[props.name])}
+                    helperText={fieldState?.error?.message || mui?.helperText}
+                    error={Boolean(fieldState?.error)}
                     size={'small'}
                     margin={'dense'}
                 />

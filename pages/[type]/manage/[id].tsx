@@ -1,15 +1,15 @@
 import React from 'react';
 import { Typography, Button, Skeleton, TextField } from '@mui/material';
-import { ListingWithId } from '../../models/Listing';
-import useQuery from '../../utils/useQuery';
-import Layout from '../../components/Layout';
+import { ListingWithId } from '../../../models/Listing';
+import useQuery from '../../../utils/useQuery';
+import Layout from '../../../components/Layout';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
-import HookTextField from '../../components/HookTextField';
+import HookTextField from '../../../components/HookTextField';
 import isMobilePhone from 'validator/lib/isMobilePhone';
 import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
-import { singularize } from '../../utils/singularize';
-import AlertContext from '../../contexts/Alert';
+import { singularize } from '../../../utils/singularize';
+import AlertContext from '../../../contexts/Alert';
 import isURL from 'validator/lib/isURL';
 
 export default function Manage() {
@@ -18,9 +18,10 @@ export default function Manage() {
     const dispatch = React.useContext(AlertContext);
     const [password, setPassword] = React.useState('');
 
-    const { control, handleSubmit, reset, formState } = useForm<ListingWithId>({
-        mode: 'onTouched',
-    });
+    const { control, handleSubmit, reset, formState, register } =
+        useForm<ListingWithId>({
+            mode: 'onTouched',
+        });
     const { data, error, isLoading, mutate } = useQuery<ListingWithId>(
         `/api/listing/${id}`,
         {
@@ -181,15 +182,39 @@ export default function Manage() {
 
                 {!isLoading && (
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <HookTextField<ListingWithId>
+                        {Object.keys(data || {})
+                            .filter(
+                                (name) =>
+                                    ![
+                                        'password',
+                                        '__v',
+                                        'isAvailable',
+                                        'type',
+                                    ].includes(name)
+                            )
+                            .map((name) =>
+                                name.startsWith('_') ? (
+                                    <input
+                                        type={'hidden'}
+                                        // @ts-ignore
+                                        {...register(name)}
+                                    />
+                                ) : (
+                                    <HookTextField<ListingWithId>
+                                        key={name}
+                                        control={control}
+                                        // @ts-ignore
+                                        name={name}
+                                    />
+                                )
+                            )}
+                        {/* <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'name'}
                             mui={{ helperText: 'Your full name' }}
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'title'}
                             mui={{
                                 helperText:
@@ -199,7 +224,6 @@ export default function Manage() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'description'}
                             mui={{
                                 helperText:
@@ -209,7 +233,6 @@ export default function Manage() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'image'}
                             defaultValue={''}
                             mui={{
@@ -224,7 +247,6 @@ export default function Manage() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'phone'}
                             mui={{ helperText: 'Your phone number' }}
                             rules={{
@@ -235,7 +257,6 @@ export default function Manage() {
                         />
                         <HookTextField<ListingWithId>
                             control={control}
-                            errors={formState.errors}
                             name={'email'}
                             mui={{ helperText: 'Your email address' }}
                             rules={{
@@ -243,7 +264,7 @@ export default function Manage() {
                                     isEmail(str as string) ||
                                     'A valid email address must be entered',
                             }}
-                        />
+                        /> */}
                     </div>
                 )}
             </form>

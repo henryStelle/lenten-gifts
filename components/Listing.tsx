@@ -9,6 +9,7 @@ import {
     Link,
     CardMedia,
     CardHeader,
+    Divider,
 } from '@mui/material';
 import { ListingWithId } from '../models/Listing';
 
@@ -24,6 +25,7 @@ export default function Listing(props: ListingWithId) {
             onMouseLeave={() => setHover(false)}
         >
             <Card>
+                {/* TODO: consider title size -- too small on mobile */}
                 <CardHeader
                     title={props.title}
                     subheader={props.name}
@@ -54,13 +56,30 @@ export default function Listing(props: ListingWithId) {
                         <Typography variant='body2' gutterBottom>
                             {props.description}
                         </Typography>
+                        <Divider sx={{ marginY: 1 }} />
+                        <Typography variant='body2' gutterBottom>
+                            Details:
+                        </Typography>
+                        {props.type === 'group' && (
+                            <>
+                                <Typography variant='body2'>
+                                    {props.meetingDays}
+                                </Typography>
+                                <Typography variant='body2'>
+                                    {props.meetingTime}
+                                </Typography>
+                                <Typography variant='body2'>
+                                    {props.meetingInterval}
+                                </Typography>
+                            </>
+                        )}
                         <Link variant='body2' href={`tel:${props.phone}`}>
                             {props.phone}
                         </Link>
                     </div>
                 </CardContent>
                 <CardActions>
-                    <Button href={`/manage/${props._id}`} target={'_blank'}>
+                    <Button href={`./manage/${props._id}`} target={'_blank'}>
                         Edit
                     </Button>
                     <div style={{ flexGrow: 1 }} />

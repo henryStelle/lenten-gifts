@@ -10,6 +10,9 @@ export interface Listing {
     isAvailable: boolean;
     title: string;
     description: string;
+    meetingDays?: string;
+    meetingTime?: string;
+    meetingInterval?: string;
     image?: string;
     email: string;
     phone: string;
@@ -24,59 +27,87 @@ interface ListingWithFunctions extends Listing {
     verifyPassword: (password: string) => Promise<boolean>;
 }
 
-const ListingSchema = new Schema<ListingWithFunctions>({
-    name: {
-        required: true,
-        type: String,
-        minlength: 5,
-        trim: true,
-    },
-    type: {
-        required: true,
-        enum: ['gift', 'group'],
-        type: String,
-    },
-    isAvailable: {
-        default: true,
-        type: Boolean,
-    },
-    title: {
-        required: true,
-        type: String,
-        minlength: 5,
-        trim: true,
-    },
-    description: {
-        required: true,
-        type: String,
-        trim: true,
-    },
-    image: String,
-    email: {
-        required: true,
-        type: String,
-        trim: true,
-        lowercase: true,
-        validate: {
-            validator: (email: string) => isEmail(email),
-            message: '{VALUE} is an invalid email',
+const ListingSchema = new Schema<ListingWithFunctions>(
+    {
+        name: {
+            required: true,
+            type: String,
+            minlength: 5,
+            trim: true,
+        },
+        type: {
+            required: true,
+            enum: ['gift', 'group'],
+            type: String,
+        },
+        isAvailable: {
+            default: true,
+            type: Boolean,
+        },
+        title: {
+            required: true,
+            type: String,
+            minlength: 5,
+            trim: true,
+        },
+        description: {
+            required: true,
+            type: String,
+            trim: true,
+        },
+        meetingDays: {
+            required: function isRequired(this: Listing) {
+                return this.type === 'group';
+            },
+            type: String,
+            minlength: 3,
+            trim: true,
+        },
+        meetingTime: {
+            required: function isRequired(this: Listing) {
+                return this.type === 'group';
+            },
+            type: String,
+            trim: true,
+        },
+        meetingInterval: {
+            required: function isRequired(this: Listing) {
+                return this.type === 'group';
+            },
+            type: String,
+            trim: true,
+        },
+        image: String,
+        email: {
+            required: true,
+            type: String,
+            trim: true,
+            lowercase: true,
+            validate: {
+                validator: (email: string) => isEmail(email),
+                message: '{VALUE} is an invalid email',
+            },
+        },
+        phone: {
+            required: true,
+            type: String,
+            trim: true,
+            set: (phone: string) =>
+                phone.includes('+') ? phone : `+1 ${phone}`,
+            validate: {
+                validator: (phone: string) => isMobilePhone(phone),
+                message: '{VALUE} is an invalid phone number',
+            },
+        },
+        password: {
+            required: true,
+            type: String,
         },
     },
-    phone: {
-        required: true,
-        type: String,
-        trim: true,
-        set: (phone: string) => (phone.includes('+') ? phone : `+1 ${phone}`),
-        validate: {
-            validator: (phone: string) => isMobilePhone(phone),
-            message: '{VALUE} is an invalid phone number',
-        },
-    },
-    password: {
-        required: true,
-        type: String,
-    },
-});
+    {
+        toObject: { versionKey: false },
+    }
+);
 
 // hash the password before saving
 ListingSchema.pre('save', async function () {
