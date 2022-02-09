@@ -7,7 +7,7 @@ import {
     Grid,
     useTheme,
 } from '@mui/material';
-import { Listing, ListingWithId } from '../../models/Listing';
+import { ListingWithId } from '../../models/Listing';
 import Layout from '../../components/Layout';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../components/HookTextField';
@@ -19,7 +19,6 @@ import { useRouter } from 'next/router';
 import AlertContext from '../../contexts/Alert';
 import useQuery from '../../utils/useQuery';
 import isURL from 'validator/lib/isURL';
-import HookCheckBox from '../../components/HookCheckBox';
 
 interface Photo {
     alt: string;
@@ -72,7 +71,7 @@ export default function Offer() {
     );
 
     const router = useRouter();
-    const type = router.query.type as string | undefined;
+    const type = singularize(router.query.type as string | undefined);
 
     const onSubmit: SubmitHandler<ListingWithId> = async (body) => {
         try {
@@ -121,13 +120,13 @@ export default function Offer() {
     };
 
     React.useEffect(() => {
-        if (type) setValue('type', singularize(type));
+        if (type) setValue('type', type);
     }, [type, setValue]);
 
     return (
         <Layout title={'Create Listing'}>
             <Typography variant='h4' gutterBottom>
-                Sign up to offer a {singularize(type)}
+                Sign up to offer a {type}
             </Typography>
 
             <form
@@ -136,7 +135,7 @@ export default function Offer() {
             >
                 <input
                     type={'hidden'}
-                    defaultValue={singularize(type)}
+                    defaultValue={type}
                     {...register('type')}
                 />
                 <Grid container spacing={2}>
@@ -164,8 +163,7 @@ export default function Offer() {
                             name={'title'}
                             mui={{
                                 helperText:
-                                    'The title or summary of the ' +
-                                    singularize(type),
+                                    'The title or summary of the ' + type,
                                 fullWidth: true,
                             }}
                             defaultValue={''}
@@ -186,7 +184,7 @@ export default function Offer() {
                             mui={{
                                 helperText:
                                     'More specific details regarding the ' +
-                                    singularize(type),
+                                    type,
                                 fullWidth: true,
                             }}
                             rules={{ required: 'A description is required' }}
