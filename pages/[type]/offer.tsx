@@ -121,7 +121,7 @@ export default function Offer() {
     };
 
     React.useEffect(() => {
-        if (type) setValue('type', type);
+        if (type) setValue('type', singularize(type));
     }, [type, setValue]);
 
     return (
