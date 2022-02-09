@@ -7,6 +7,7 @@ import { Typography, Grid } from '@mui/material';
 import { singularize } from '../../utils/singularize';
 import { toTitleCase } from '../../utils/toTitleCase';
 import useQuery from '../../utils/useQuery';
+import Loading from '../../components/Loading';
 
 export default function View() {
     const router = useRouter();
@@ -26,7 +27,7 @@ export default function View() {
             {error && (
                 <Typography color={'error'}>{error.toString()}</Typography>
             )}
-            {isLoading && <Typography align={'center'}>Loading...</Typography>}
+            {isLoading && <Loading />}
             <Grid container spacing={3}>
                 {filtered.map((gift) => (
                     <Listing key={gift._id} {...gift} />
