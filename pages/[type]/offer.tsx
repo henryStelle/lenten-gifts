@@ -200,6 +200,7 @@ export default function Offer() {
                                         fullWidth: true,
                                         helperText:
                                             'What days of the week you plan on meeting?',
+                                        placeholder: 'Monday, Friday',
                                     }}
                                     rules={{
                                         required: 'This field is required',
@@ -219,6 +220,7 @@ export default function Offer() {
                                         label: 'Meeting Time',
                                         helperText:
                                             'What time do you plan on meeting and for how long? If you do not know, just put TBD',
+                                        placeholder: '5pm - 6pm',
                                     }}
                                     rules={{
                                         required: 'A meeting time is required',
@@ -232,6 +234,7 @@ export default function Offer() {
                                         label: 'Meeting Interval',
                                         helperText:
                                             'How frequently will you be meeting? Weekly? Every other week? etc.',
+                                        placeholder: 'Weekly',
                                     }}
                                     defaultValue={''}
                                     rules={{
