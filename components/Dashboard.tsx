@@ -32,6 +32,7 @@ export default function Dashboard({ data, keys }: DashboardProps) {
                         <TableRow key={_id}>
                             {keys.map((key) => (
                                 <TableCell key={key}>
+                                    {/* @ts-ignore */}
                                     {listing[key]?.toString()}
                                 </TableCell>
                             ))}
