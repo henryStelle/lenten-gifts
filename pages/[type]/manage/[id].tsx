@@ -1,16 +1,12 @@
 import React from 'react';
-import { Typography, Button, Skeleton, TextField } from '@mui/material';
+import { Typography, Button, Skeleton } from '@mui/material';
 import { ListingWithId } from '../../../models/Listing';
 import useQuery from '../../../utils/useQuery';
 import Layout from '../../../components/Layout';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../../components/HookTextField';
-import isMobilePhone from 'validator/lib/isMobilePhone';
-import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
-import { singularize } from '../../../utils/singularize';
 import AlertContext from '../../../contexts/Alert';
-import isURL from 'validator/lib/isURL';
 
 export default function Manage() {
     const router = useRouter();
@@ -88,28 +84,6 @@ export default function Manage() {
             mutate(`/api/listing/${id}`, result);
         }
     };
-
-    // if (error?.toString()?.includes('403')) {
-    //     return (
-    //         <Layout title='Sign In'>
-    //             <Typography variant='h4'>Please Sign In</Typography>
-    //             <form
-    //                 onSubmit={(e) => {
-    //                     e.preventDefault();
-    //                     mutate(`/api/listing/${id}`, true);
-    //                 }}
-    //                 style={{ maxWidth: 400, width: '100%' }}
-    //             >
-    //                 <Button
-    //                     variant='contained'
-    //                     type={'submit'}
-    //                 >
-    //                     Sign In
-    //                 </Button>
-    //             </form>
-    //         </Layout>
-    //     );
-    // }
 
     return (
         <Layout title={'Manage Listing'}>

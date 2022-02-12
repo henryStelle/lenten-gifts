@@ -62,7 +62,6 @@ export default function Offer() {
         mode: 'onTouched',
     });
 
-    const [isLoading, setIsLoading] = React.useState(false);
     const dispatch = React.useContext(AlertContext);
     const { data } = useQuery<PhotoSearch>(
         watch('title')?.length > 4
@@ -122,6 +121,10 @@ export default function Offer() {
     React.useEffect(() => {
         if (type) setValue('type', type);
     }, [type, setValue]);
+
+    React.useEffect(() => {
+        setValue('image', `${window.location.origin}/default.jpg`);
+    }, [setValue]);
 
     return (
         <Layout title={'Create Listing'}>
@@ -342,11 +345,7 @@ export default function Offer() {
                         : "Thank you for sharing your gift with St. John's this Lent."}
                 </Typography>
 
-                <Button
-                    variant='contained'
-                    disabled={isLoading}
-                    type={'submit'}
-                >
+                <Button variant='contained' type={'submit'}>
                     Offer {toTitleCase(type)}
                 </Button>
             </form>
