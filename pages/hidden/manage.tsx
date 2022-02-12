@@ -1,4 +1,5 @@
-import { Typography } from '@mui/material';
+import React from 'react';
+import { TextField, Typography } from '@mui/material';
 import Layout from '../../components/Layout';
 import Loading from '../../components/Loading';
 import Dashboard from '../../components/Dashboard';
@@ -12,6 +13,15 @@ export default function Manage() {
         isLoading,
     } = useQuery<ListingWithId[]>('/api/listing/list?filter=false');
 
+    const [query, setQuery] = React.useState('');
+    const filtered = React.useMemo(
+        () =>
+            data.filter((row) =>
+                JSON.stringify(row).toLowerCase().includes(query.toLowerCase())
+            ),
+        [data, query]
+    );
+
     return (
         <Layout title={'Manage'}>
             <Typography variant='h4' gutterBottom>
@@ -23,9 +33,17 @@ export default function Manage() {
                     {error.toString()}
                 </Typography>
             )}
+            <TextField
+                label={'Search'}
+                fullWidth
+                margin='normal'
+                size={'small'}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+            />
             {data && (
                 <Dashboard
-                    data={data}
+                    data={filtered}
                     keys={['title', 'type', 'name', 'email', 'isAvailable']}
                     map={(key, value) =>
                         key == 'isAvailable' ? (value ? 'Yes' : 'No') : value
