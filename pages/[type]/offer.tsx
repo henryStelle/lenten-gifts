@@ -289,24 +289,6 @@ export default function Offer() {
                                     'A valid email address must be entered',
                             }}
                         />
-                        <HookTextField<ListingWithId>
-                            control={control}
-                            name={'password'}
-                            mui={{
-                                helperText: 'Your password',
-                                fullWidth: true,
-                                type: 'password',
-                                autoComplete: 'new-password',
-                            }}
-                            defaultValue={''}
-                            rules={{
-                                minLength: {
-                                    value: 8,
-                                    message:
-                                        'Your password must be at least 8 characters',
-                                },
-                            }}
-                        />
                     </Grid>
                     <Grid item xs={12} md={4}>
                         <Typography align={'center'}>

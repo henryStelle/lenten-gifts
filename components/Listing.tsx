@@ -12,9 +12,23 @@ import {
     Divider,
 } from '@mui/material';
 import { ListingWithId } from '../models/Listing';
+import AlertContext from '../contexts/Alert';
 
 export default function Listing(props: ListingWithId) {
     const [hover, setHover] = React.useState(false);
+    const dispatch = React.useContext(AlertContext);
+
+    const handleEdit = () => {
+        dispatch({
+            type: 'open',
+            payload: {
+                message:
+                    'To edit this posting, please use the link provided when you registered or, if you have lost it, contact our parish administrator, Kelly Krisman, at parishadministrator@stjohnsgigharbor.org',
+                severity: 'info',
+            },
+        });
+    };
+
     return (
         <Grid
             item
@@ -79,9 +93,7 @@ export default function Listing(props: ListingWithId) {
                     </div>
                 </CardContent>
                 <CardActions>
-                    <Button href={`./manage/${props._id}`} target={'_blank'}>
-                        Edit
-                    </Button>
+                    <Button onClick={handleEdit}>Edit</Button>
                     <div style={{ flexGrow: 1 }} />
                     <Button variant='outlined' href={`mailto:${props.email}`}>
                         Email

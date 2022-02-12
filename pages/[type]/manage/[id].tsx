@@ -16,21 +16,13 @@ export default function Manage() {
     const router = useRouter();
     const id = router.query.id as string | undefined;
     const dispatch = React.useContext(AlertContext);
-    const [password, setPassword] = React.useState('');
 
     const { control, handleSubmit, reset, formState, register } =
         useForm<ListingWithId>({
             mode: 'onTouched',
         });
     const { data, error, isLoading, mutate } = useQuery<ListingWithId>(
-        `/api/listing/${id}`,
-        {
-            headers: {
-                Authorization:
-                    'Basic ' +
-                    Buffer.from(':' + password, 'utf-8').toString('base64'),
-            },
-        }
+        `/api/listing/${id}`
     );
 
     React.useEffect(() => {
@@ -97,38 +89,27 @@ export default function Manage() {
         }
     };
 
-    if (error?.toString()?.includes('403')) {
-        return (
-            <Layout title='Sign In'>
-                <Typography variant='h4'>Please Sign In</Typography>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        mutate(`/api/listing/${id}`, true);
-                    }}
-                    style={{ maxWidth: 400, width: '100%' }}
-                >
-                    <TextField
-                        label={'Password'}
-                        type={'password'}
-                        fullWidth
-                        size={'small'}
-                        margin={'normal'}
-                        value={password}
-                        autoComplete={'current-password'}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Button
-                        variant='contained'
-                        disabled={!password}
-                        type={'submit'}
-                    >
-                        Sign In
-                    </Button>
-                </form>
-            </Layout>
-        );
-    }
+    // if (error?.toString()?.includes('403')) {
+    //     return (
+    //         <Layout title='Sign In'>
+    //             <Typography variant='h4'>Please Sign In</Typography>
+    //             <form
+    //                 onSubmit={(e) => {
+    //                     e.preventDefault();
+    //                     mutate(`/api/listing/${id}`, true);
+    //                 }}
+    //                 style={{ maxWidth: 400, width: '100%' }}
+    //             >
+    //                 <Button
+    //                     variant='contained'
+    //                     type={'submit'}
+    //                 >
+    //                     Sign In
+    //                 </Button>
+    //             </form>
+    //         </Layout>
+    //     );
+    // }
 
     return (
         <Layout title={'Manage Listing'}>
@@ -137,8 +118,11 @@ export default function Manage() {
             </Typography>
             <Typography sx={{ marginBottom: 4 }}>
                 This page allows you to edit your listing or mark it as no
-                longer available. It is recommended that you bookmark this page
-                to ensure you are able to find it later.
+                longer available.{' '}
+                <strong>
+                    Please bookmark this page to ensure you are able to find it
+                    later.
+                </strong>
             </Typography>
 
             {error && (
@@ -185,12 +169,9 @@ export default function Manage() {
                         {Object.keys(data || {})
                             .filter(
                                 (name) =>
-                                    ![
-                                        'password',
-                                        '__v',
-                                        'isAvailable',
-                                        'type',
-                                    ].includes(name)
+                                    !['__v', 'isAvailable', 'type'].includes(
+                                        name
+                                    )
                             )
                             .map((name) =>
                                 name.startsWith('_') ? (
