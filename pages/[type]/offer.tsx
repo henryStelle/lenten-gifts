@@ -36,6 +36,7 @@ export default function Offer() {
         mode: 'onTouched',
     });
 
+    const [defaultImage, setDefaultImage] = React.useState('');
     const dispatch = React.useContext(AlertContext);
     const { data } = useQuery<PhotoSearch>(
         watch('title')?.length > 4
@@ -97,7 +98,7 @@ export default function Offer() {
     }, [type, setValue]);
 
     React.useEffect(() => {
-        setValue('image', `${window.location.origin}/default.jpg`);
+        setDefaultImage(`${window.location.origin}/default.jpg`);
     }, [setValue]);
 
     return (
@@ -277,7 +278,27 @@ export default function Offer() {
                             sx={{ width: '100%', height: 420 }}
                             cols={2}
                             rowHeight={180}
-                            photos={data?.photos || []}
+                            photos={[
+                                {
+                                    alt: 'The default lenten image',
+                                    avg_color: '#fff',
+                                    height: 1,
+                                    width: 1,
+                                    id: '1',
+                                    photographer: 'unknown',
+                                    photographer_id: '5678',
+                                    photographer_url: 'rt7io',
+                                    url: defaultImage,
+                                    src: {
+                                        landscape: defaultImage,
+                                        large: defaultImage,
+                                        large2x: defaultImage,
+                                        medium: defaultImage,
+                                        small: defaultImage,
+                                        tiny: defaultImage,
+                                    },
+                                } as unknown as Photo,
+                            ].concat(data?.photos || [])}
                             onPhotoClick={(photo) =>
                                 setValue('image', photo.src.medium, {
                                     shouldDirty: false,
