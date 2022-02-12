@@ -4,27 +4,28 @@ import {
     FormGroup,
     FormHelperText,
     FormLabel,
+    Radio,
     TextField,
     TextFieldProps,
 } from '@mui/material';
 import { Controller, FieldErrors, UseControllerProps } from 'react-hook-form';
 import { toTitleCase } from '../utils/toTitleCase';
 
-interface HookCheckBoxProps<T> extends UseControllerProps<T> {
+interface HookRadioProps<T> extends UseControllerProps<T> {
     mui?: TextFieldProps;
     options: string[];
 }
 
-export default function HookCheckBox<T>({
+export default function HookRadio<T>({
     mui,
     options,
     ...props
-}: HookCheckBoxProps<T>) {
+}: HookRadioProps<T>) {
     return (
         <Controller
             {...props}
             render={({ field: { onChange, ...field }, fieldState }) => (
-                <FormGroup {...field}>
+                <FormGroup {...field} sx={{ marginTop: 1 }}>
                     <FormLabel
                         component={'legend'}
                         error={Boolean(fieldState.error)}
@@ -36,30 +37,12 @@ export default function HookCheckBox<T>({
                             <FormControlLabel
                                 key={option}
                                 control={
-                                    <Checkbox
-                                        checked={(
-                                            field.value as string[]
-                                        ).includes(option.toLowerCase())}
+                                    <Radio
+                                        checked={
+                                            option.toLowerCase() == field.value
+                                        }
                                         value={option.toLowerCase()}
-                                        onChange={(_, checked) => {
-                                            if (checked) {
-                                                onChange(
-                                                    (
-                                                        field.value as string[]
-                                                    ).concat([
-                                                        option.toLowerCase(),
-                                                    ])
-                                                );
-                                            } else {
-                                                const val = new Set(
-                                                    field.value as string[]
-                                                );
-                                                val.delete(
-                                                    option.toLowerCase()
-                                                );
-                                                onChange(Array.from(val));
-                                            }
-                                        }}
+                                        onChange={onChange}
                                     />
                                 }
                                 label={option}

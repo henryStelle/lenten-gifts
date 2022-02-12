@@ -29,6 +29,8 @@ export default function Listing(props: ListingWithId) {
         });
     };
 
+    console.log(props);
+
     return (
         <Grid
             item
@@ -71,25 +73,32 @@ export default function Listing(props: ListingWithId) {
                             {props.description}
                         </Typography>
                         <Divider sx={{ marginY: 1 }} />
-                        <Typography variant='body2' gutterBottom>
-                            Details:
-                        </Typography>
                         {props.type === 'group' && (
                             <>
-                                <Typography variant='body2'>
-                                    {props.meetingDays}
+                                <Typography variant='body2' gutterBottom>
+                                    Important:{' '}
+                                    {props.vaccinationRequired && (
+                                        <Typography
+                                            variant='body2'
+                                            component={'span'}
+                                            color={'error'}
+                                        >
+                                            Vaccination Required
+                                        </Typography>
+                                    )}
                                 </Typography>
                                 <Typography variant='body2'>
-                                    {props.meetingTime}
-                                </Typography>
-                                <Typography variant='body2'>
-                                    {props.meetingInterval}
+                                    When: {props.meetingDays},{' '}
+                                    {props.meetingTime}, {props.meetingInterval}
                                 </Typography>
                             </>
                         )}
-                        <Link variant='body2' href={`tel:${props.phone}`}>
-                            {props.phone}
-                        </Link>
+                        <Typography variant='body2'>
+                            Contact:{' '}
+                            <Link href={`tel:${props.phone}`}>
+                                {props.phone}
+                            </Link>
+                        </Typography>
                     </div>
                 </CardContent>
                 <CardActions>

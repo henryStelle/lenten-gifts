@@ -14,6 +14,7 @@ export interface Listing {
     image?: string;
     email: string;
     phone: string;
+    vaccinationRequired: boolean;
 }
 
 export interface ListingWithId extends Listing {
@@ -92,6 +93,7 @@ const ListingSchema = new Schema<Listing>(
                 message: '{VALUE} is an invalid phone number',
             },
         },
+        vaccinationRequired: Boolean,
     },
     {
         toObject: { versionKey: false },
@@ -101,5 +103,8 @@ const ListingSchema = new Schema<Listing>(
 // if the model has already been compiled, use that version, else compile for the first time (next.js issue)
 const ListingModel: Model<Listing> =
     models.Listing || model<Listing>('Listing', ListingSchema);
+
+Schema.Types.Boolean.convertToFalse.add('false');
+Schema.Types.Boolean.convertToTrue.add('true');
 
 export default ListingModel;

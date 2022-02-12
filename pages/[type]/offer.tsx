@@ -13,6 +13,7 @@ import AlertContext from '../../contexts/Alert';
 import useQuery from '../../utils/useQuery';
 import isURL from 'validator/lib/isURL';
 import ImageList, { Photo } from '../../components/ImageList';
+import HookRadio from '../../components/HookRadio';
 
 interface PhotoSearch {
     next_page: string;
@@ -82,6 +83,7 @@ export default function Offer() {
 
     const onSubmitError: SubmitErrorHandler<ListingWithId> = (form) => {
         const count = Object.keys(form).length;
+        console.log(getValues());
         dispatch({
             type: 'open',
             payload: {
@@ -218,6 +220,15 @@ export default function Offer() {
                                     rules={{
                                         required:
                                             'A meeting interval is required',
+                                    }}
+                                />
+                                <HookRadio<ListingWithId>
+                                    control={control}
+                                    name={'vaccinationRequired'}
+                                    defaultValue={'yes'}
+                                    options={['Yes', 'No']}
+                                    mui={{
+                                        label: 'Vaccination required for Participation?',
                                     }}
                                 />
                             </>
