@@ -1,17 +1,18 @@
 import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { singularize } from '../utils/singularize';
+import { toTitleCase } from '../utils/toTitleCase';
 
 export default function NavBar() {
     const router = useRouter();
-    const type = router.query.type as string | undefined;
+    const type = singularize(router.query.type as string | undefined);
     const current_page = router.asPath.split('/').pop();
 
     return (
         <AppBar>
             <Toolbar>
                 <Typography variant='h6' sx={{ flexGrow: 1 }}>
-                    Lenten Programs
+                    Lenten {toTitleCase(type)}s
                 </Typography>
                 {type && (
                     <>
@@ -25,7 +26,7 @@ export default function NavBar() {
                             onClick={() => router.push(`/${type}/view`)}
                             sx={{ marginRight: 2 }}
                         >
-                            View {singularize(type) + 's'}
+                            View {type}s
                         </Button>
                         <Button
                             color={'secondary'}

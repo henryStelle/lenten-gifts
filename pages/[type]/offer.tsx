@@ -309,7 +309,13 @@ export default function Offer() {
                                         alt={photo.alt}
                                         loading='lazy'
                                         onClick={() =>
-                                            setValue('image', photo.src.medium)
+                                            setValue(
+                                                'image',
+                                                photo.src.medium,
+                                                {
+                                                    shouldDirty: false,
+                                                }
+                                            )
                                         }
                                         style={
                                             watch('image') === photo.src.medium

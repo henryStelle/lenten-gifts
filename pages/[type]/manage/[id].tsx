@@ -122,7 +122,9 @@ export default function Manage() {
                 <strong>
                     Please bookmark this page to ensure you are able to find it
                     later.
-                </strong>
+                </strong>{' '}
+                To bookmark this page on most browsers, click the star with the
+                plus in the top right-hand corner.
             </Typography>
 
             {error && (
