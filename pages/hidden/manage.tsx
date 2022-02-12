@@ -10,7 +10,7 @@ export default function Manage() {
         data = [],
         error,
         isLoading,
-    } = useQuery<ListingWithId[]>('/api/listing/list');
+    } = useQuery<ListingWithId[]>('/api/listing/list?filter=false');
 
     return (
         <Layout title={'Manage'}>
@@ -27,6 +27,12 @@ export default function Manage() {
                 <Dashboard
                     data={data}
                     keys={['title', 'type', 'name', 'email', 'isAvailable']}
+                    map={(key, value) =>
+                        key == 'isAvailable' ? (value ? 'Yes' : 'No') : value
+                    }
+                    rename={(key) =>
+                        key == 'isAvailable' ? 'Available?' : key
+                    }
                 />
             )}
         </Layout>
