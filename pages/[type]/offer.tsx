@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    Typography,
-    Button,
-    ImageList,
-    ImageListItem,
-    Grid,
-    useTheme,
-} from '@mui/material';
+import { Typography, Button, Grid, useTheme } from '@mui/material';
 import { ListingWithId } from '../../models/Listing';
 import Layout from '../../components/Layout';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
@@ -19,26 +12,7 @@ import { useRouter } from 'next/router';
 import AlertContext from '../../contexts/Alert';
 import useQuery from '../../utils/useQuery';
 import isURL from 'validator/lib/isURL';
-
-interface Photo {
-    alt: string;
-    avg_color: string;
-    height: number;
-    width: number;
-    id: number;
-    photographer: string;
-    photographer_id: number;
-    photographer_url: string;
-    url: string;
-    src: {
-        landscape: string;
-        large: string;
-        large2x: string;
-        medium: string;
-        small: string;
-        tiny: string;
-    };
-}
+import ImageList, { Photo } from '../../components/ImageList';
 
 interface PhotoSearch {
     next_page: string;
@@ -300,41 +274,25 @@ export default function Offer() {
                                 : 'Please click on one of the following images to automatically set your listing image.'}
                         </Typography>
                         <ImageList
-                            sx={{ width: '100%', height: 490 }}
+                            sx={{ width: '100%', height: 420 }}
                             cols={2}
                             rowHeight={180}
+                            photos={data?.photos || []}
+                            onPhotoClick={(photo) =>
+                                setValue('image', photo.src.medium, {
+                                    shouldDirty: false,
+                                })
+                            }
+                            selectedUrl={watch('image')}
+                            selectedItemStyle={{
+                                border:
+                                    '4px solid ' + theme.palette.primary.main,
+                            }}
+                            unselectedItemStyle={{
+                                filter: 'grayscale(0.5)',
+                            }}
                         >
-                            {data?.photos.map((photo) => (
-                                <ImageListItem key={photo.id}>
-                                    {/* eslint @next/next/no-img-element: off  */}
-                                    <img
-                                        src={photo.src.medium}
-                                        alt={photo.alt}
-                                        loading='lazy'
-                                        onClick={() =>
-                                            setValue(
-                                                'image',
-                                                photo.src.medium,
-                                                {
-                                                    shouldDirty: false,
-                                                }
-                                            )
-                                        }
-                                        style={
-                                            watch('image') === photo.src.medium
-                                                ? {
-                                                      border:
-                                                          '4px solid ' +
-                                                          theme.palette.primary
-                                                              .main,
-                                                  }
-                                                : {
-                                                      filter: 'grayscale(0.5)',
-                                                  }
-                                        }
-                                    />
-                                </ImageListItem>
-                            )) || <></>}
+                            <p>Fallback</p>
                         </ImageList>
                     </Grid>
                 </Grid>
