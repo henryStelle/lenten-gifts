@@ -29,7 +29,7 @@ export default function Listing(props: ListingWithId) {
         });
     };
 
-    console.log(props);
+    // console.log(props);
 
     return (
         <Grid
@@ -75,9 +75,9 @@ export default function Listing(props: ListingWithId) {
                         <Divider sx={{ marginY: 1 }} />
                         {props.type === 'group' && (
                             <>
-                                <Typography variant='body2' gutterBottom>
-                                    Important:{' '}
-                                    {props.vaccinationRequired && (
+                                {props.vaccinationRequired && (
+                                    <Typography variant='body2' gutterBottom>
+                                        Important:{' '}
                                         <Typography
                                             variant='body2'
                                             component={'span'}
@@ -85,8 +85,8 @@ export default function Listing(props: ListingWithId) {
                                         >
                                             Vaccination Required
                                         </Typography>
-                                    )}
-                                </Typography>
+                                    </Typography>
+                                )}
                                 <Typography variant='body2'>
                                     When: {props.meetingDays},{' '}
                                     {props.meetingTime}, {props.meetingInterval}

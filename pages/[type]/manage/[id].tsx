@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button, Skeleton } from '@mui/material';
+import { Typography, Button, Skeleton, Grid, useTheme } from '@mui/material';
 import { ListingWithId } from '../../../models/Listing';
 import useQuery from '../../../utils/useQuery';
 import Layout from '../../../components/Layout';
@@ -7,18 +7,27 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../../components/HookTextField';
 import { useRouter } from 'next/router';
 import AlertContext from '../../../contexts/Alert';
+import ImageList, { PhotoSearch } from '../../../components/ImageList';
+import useDefaultImage from '../../../utils/useDefaultImage';
 
 export default function Manage() {
     const router = useRouter();
+    const theme = useTheme();
     const id = router.query.id as string | undefined;
     const dispatch = React.useContext(AlertContext);
+    const defaultImage = useDefaultImage();
 
-    const { control, handleSubmit, reset, formState, register } =
+    const { control, handleSubmit, reset, watch, setValue, register } =
         useForm<ListingWithId>({
             mode: 'onTouched',
         });
     const { data, error, isLoading, mutate } = useQuery<ListingWithId>(
         `/api/listing/${id}`
+    );
+    const photos = useQuery<PhotoSearch>(
+        watch('title')?.length > 4
+            ? `/api/photos?title=${encodeURIComponent(watch('title'))}`
+            : null
     );
 
     React.useEffect(() => {
@@ -141,88 +150,85 @@ export default function Manage() {
                 </div>
 
                 {!isLoading && (
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        {Object.keys(data || {})
-                            .filter(
-                                (name) =>
-                                    !['__v', 'isAvailable', 'type'].includes(
-                                        name
-                                    )
-                            )
-                            .map((name) =>
-                                name.startsWith('_') ? (
-                                    <input
-                                        type={'hidden'}
-                                        // @ts-ignore
-                                        {...register(name)}
-                                    />
-                                ) : (
-                                    <HookTextField<ListingWithId>
-                                        key={name}
-                                        control={control}
-                                        // @ts-ignore
-                                        name={name}
-                                    />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={8}>
+                            {Object.entries(data || {})
+                                .filter(
+                                    ([name]) =>
+                                        ![
+                                            '__v',
+                                            'isAvailable',
+                                            'type',
+                                        ].includes(name)
                                 )
-                            )}
-                        {/* <HookTextField<ListingWithId>
-                            control={control}
-                            name={'name'}
-                            mui={{ helperText: 'Your full name' }}
-                        />
-                        <HookTextField<ListingWithId>
-                            control={control}
-                            name={'title'}
-                            mui={{
-                                helperText:
-                                    'The title or summary of the ' +
-                                    singularize(data?.type),
-                            }}
-                        />
-                        <HookTextField<ListingWithId>
-                            control={control}
-                            name={'description'}
-                            mui={{
-                                helperText:
-                                    'More specific details regarding the ' +
-                                    singularize(data?.type),
-                            }}
-                        />
-                        <HookTextField<ListingWithId>
-                            control={control}
-                            name={'image'}
-                            defaultValue={''}
-                            mui={{
-                                helperText:
-                                    'The url of the image related to your listing',
-                            }}
-                            rules={{
-                                validate: (url) =>
-                                    isURL(url as string) ||
-                                    "The image's URL must be valid",
-                            }}
-                        />
-                        <HookTextField<ListingWithId>
-                            control={control}
-                            name={'phone'}
-                            mui={{ helperText: 'Your phone number' }}
-                            rules={{
-                                validate: (str) =>
-                                    isMobilePhone(str as string) ||
-                                    'A valid phone number must be entered in the North American format: 253 456 7899',
-                            }}
-                        />
-                        <HookTextField<ListingWithId>
-                            control={control}
-                            name={'email'}
-                            mui={{ helperText: 'Your email address' }}
-                            rules={{
-                                validate: (str) =>
-                                    isEmail(str as string) ||
-                                    'A valid email address must be entered',
-                            }}
-                        /> */}
-                    </div>
+                                .map(([name, value]) =>
+                                    name.startsWith('_') ? (
+                                        <input
+                                            type={'hidden'}
+                                            // @ts-ignore
+                                            {...register(name)}
+                                        />
+                                    ) : (
+                                        <HookTextField<ListingWithId>
+                                            key={name}
+                                            control={control}
+                                            // @ts-ignore
+                                            name={name}
+                                            mui={{
+                                                helperText:
+                                                    typeof value ===
+                                                        'boolean' &&
+                                                    'To edit, enter "true" or "false"',
+                                                fullWidth: true,
+                                            }}
+                                            rules={{
+                                                validate: (val) =>
+                                                    (typeof value === 'boolean'
+                                                        ? [
+                                                              'true',
+                                                              'false',
+                                                          ].includes(
+                                                              val as string
+                                                          )
+                                                        : true) ||
+                                                    'To edit, enter "true" or "false"',
+                                            }}
+                                        />
+                                    )
+                                )}
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Typography align={'center'}>
+                                {watch('title')?.length < 5
+                                    ? 'Please enter a title of at least 5 characters to preview images.'
+                                    : 'Please click on one of the following images to automatically set your listing image.'}
+                            </Typography>
+                            <ImageList
+                                sx={{ width: '100%', height: 420 }}
+                                cols={2}
+                                rowHeight={180}
+                                photos={[defaultImage].concat(
+                                    photos.data?.photos || []
+                                )}
+                                onPhotoClick={(photo) =>
+                                    setValue('image', photo.src.medium, {
+                                        shouldDirty: false,
+                                    })
+                                }
+                                selectedUrl={watch('image')}
+                                selectedItemStyle={{
+                                    border:
+                                        '4px solid ' +
+                                        theme.palette.primary.main,
+                                }}
+                                unselectedItemStyle={{
+                                    filter: 'grayscale(0.5)',
+                                }}
+                            >
+                                <p>Fallback</p>
+                            </ImageList>
+                        </Grid>
+                    </Grid>
                 )}
             </form>
         </Layout>

@@ -3,8 +3,15 @@ import {
     ImageList as MuiImageList,
     ImageListItem,
     ImageListProps as MuiImageListProps,
-    useTheme,
 } from '@mui/material';
+
+export interface PhotoSearch {
+    next_page: string;
+    page: number;
+    per_page: number;
+    photos: Photo[];
+    total_results: number;
+}
 
 export interface Photo {
     alt: string;

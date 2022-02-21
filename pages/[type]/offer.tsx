@@ -12,32 +12,17 @@ import { useRouter } from 'next/router';
 import AlertContext from '../../contexts/Alert';
 import useQuery from '../../utils/useQuery';
 import isURL from 'validator/lib/isURL';
-import ImageList, { Photo } from '../../components/ImageList';
+import ImageList, { PhotoSearch } from '../../components/ImageList';
 import HookRadio from '../../components/HookRadio';
-
-interface PhotoSearch {
-    next_page: string;
-    page: number;
-    per_page: number;
-    photos: Photo[];
-    total_results: number;
-}
+import useDefaultImage from '../../utils/useDefaultImage';
 
 export default function Offer() {
     const theme = useTheme();
-    const {
-        control,
-        handleSubmit,
-        formState,
-        register,
-        setValue,
-        watch,
-        getValues,
-    } = useForm<ListingWithId>({
-        mode: 'onTouched',
-    });
-
-    const [defaultImage, setDefaultImage] = React.useState('');
+    const { control, handleSubmit, register, setValue, watch, getValues } =
+        useForm<ListingWithId>({
+            mode: 'onTouched',
+        });
+    const defaultImage = useDefaultImage();
     const dispatch = React.useContext(AlertContext);
     const { data } = useQuery<PhotoSearch>(
         watch('title')?.length > 4
@@ -98,10 +83,6 @@ export default function Offer() {
     React.useEffect(() => {
         if (type) setValue('type', type);
     }, [type, setValue]);
-
-    React.useEffect(() => {
-        setDefaultImage(`${window.location.origin}/default.jpg`);
-    }, [setValue]);
 
     return (
         <Layout title={'Create Listing'}>
@@ -289,27 +270,7 @@ export default function Offer() {
                             sx={{ width: '100%', height: 420 }}
                             cols={2}
                             rowHeight={180}
-                            photos={[
-                                {
-                                    alt: 'The default lenten image',
-                                    avg_color: '#fff',
-                                    height: 1,
-                                    width: 1,
-                                    id: '1',
-                                    photographer: 'unknown',
-                                    photographer_id: '5678',
-                                    photographer_url: 'rt7io',
-                                    url: defaultImage,
-                                    src: {
-                                        landscape: defaultImage,
-                                        large: defaultImage,
-                                        large2x: defaultImage,
-                                        medium: defaultImage,
-                                        small: defaultImage,
-                                        tiny: defaultImage,
-                                    },
-                                } as unknown as Photo,
-                            ].concat(data?.photos || [])}
+                            photos={[defaultImage].concat(data?.photos || [])}
                             onPhotoClick={(photo) =>
                                 setValue('image', photo.src.medium, {
                                     shouldDirty: false,

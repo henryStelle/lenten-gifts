@@ -1,17 +1,24 @@
 import React from 'react';
-import { TextField, Typography } from '@mui/material';
+import { Button, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import Layout from '../../components/Layout';
 import Loading from '../../components/Loading';
 import Dashboard from '../../components/Dashboard';
 import { ListingWithId } from '../../models/Listing';
 import useQuery from '../../utils/useQuery';
+import EditInstructionModule from '../../components/EditInstructionModule';
+import { InstructionWithId } from '../../models/Instruction';
 
 export default function Manage() {
+    const [type, setType] = React.useState('listing');
     const {
         data = [],
         error,
         isLoading,
-    } = useQuery<ListingWithId[]>('/api/listing/list?filter=false');
+    } = useQuery<(ListingWithId | InstructionWithId)[]>(
+        type === 'listing'
+            ? '/api/listing/list?filter=false'
+            : '/api/instruction/list'
+    );
 
     const [query, setQuery] = React.useState('');
     const filtered = React.useMemo(
@@ -33,17 +40,42 @@ export default function Manage() {
                     {error.toString()}
                 </Typography>
             )}
-            <TextField
-                label={'Search'}
-                fullWidth
-                margin='normal'
-                size={'small'}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-            />
-            {data && (
+            <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label={'Search'}
+                        fullWidth
+                        // margin='normal'
+                        size={'small'}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6} md={3}>
+                    <Button
+                        variant={type === 'listing' ? 'contained' : 'outlined'}
+                        onClick={() => setType('listing')}
+                        fullWidth
+                    >
+                        Listings
+                    </Button>
+                </Grid>
+                <Grid item xs={6} md={3}>
+                    <Button
+                        variant={
+                            type === 'instruction' ? 'contained' : 'outlined'
+                        }
+                        onClick={() => setType('instruction')}
+                        fullWidth
+                    >
+                        Instructions
+                    </Button>
+                </Grid>
+            </Grid>
+
+            {type == 'listing' && data && (
                 <Dashboard
-                    data={filtered}
+                    data={filtered as ListingWithId[]}
                     keys={['title', 'type', 'name', 'email', 'isAvailable']}
                     map={(key, value) =>
                         key == 'isAvailable' ? (value ? 'Yes' : 'No') : value
@@ -52,6 +84,16 @@ export default function Manage() {
                         key == 'isAvailable' ? 'Available?' : key
                     }
                 />
+            )}
+            {type === 'instruction' && data && (
+                <Grid container spacing={2} sx={{ paddingTop: 2 }}>
+                    {data.map((instruction) => (
+                        <EditInstructionModule
+                            key={instruction._id}
+                            {...(instruction as InstructionWithId)}
+                        />
+                    ))}
+                </Grid>
             )}
         </Layout>
     );
