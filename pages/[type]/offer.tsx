@@ -220,7 +220,7 @@ export default function Offer() {
                             defaultValue={''}
                             mui={{
                                 helperText:
-                                    'The URL of an image to display with this listing. Please look to the right or scroll down to see examples, or you may manually enter your own image URL.',
+                                    'Please select one of the stock photos at the right (or scroll down if using your phone). This program does not allow the uploading of photos.',
                                 fullWidth: true,
                             }}
                             rules={{
