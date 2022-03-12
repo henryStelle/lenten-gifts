@@ -88,6 +88,21 @@ const ListingSchema = new Schema<Listing>(
             trim: true,
             set: (phone: string) =>
                 phone.includes('+') ? phone : `+1 ${phone}`,
+            get: (phone: string) => {
+                const numbers = phone.replaceAll(/[^0-9]/g, '');
+
+                // not an international north american phone number
+                if (11 != numbers.length) {
+                    return phone;
+                }
+
+                const prefix = '+ ' + numbers.at(0);
+                const areaCode = numbers.substring(1, 4);
+                const firstPart = numbers.substring(4, 7);
+                const lastPart = numbers.substring(7);
+
+                return [prefix, areaCode, firstPart, lastPart].join(' ');
+            },
             validate: {
                 validator: (phone: string) => isMobilePhone(phone),
                 message: '{VALUE} is an invalid phone number',
@@ -96,7 +111,7 @@ const ListingSchema = new Schema<Listing>(
         vaccinationRequired: Boolean,
     },
     {
-        toObject: { versionKey: false },
+        toObject: { versionKey: false, getters: true },
     }
 );
 
