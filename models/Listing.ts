@@ -89,7 +89,7 @@ const ListingSchema = new Schema<Listing>(
             set: (phone: string) =>
                 phone.includes('+') ? phone : `+1 ${phone}`,
             get: (phone: string) => {
-                const numbers = phone.replaceAll(/[^0-9]/g, '');
+                const numbers = phone.replace(/[^0-9]/g, '');
 
                 // not an international north american phone number
                 if (11 != numbers.length) {
