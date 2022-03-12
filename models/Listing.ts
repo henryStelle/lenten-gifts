@@ -96,7 +96,7 @@ const ListingSchema = new Schema<Listing>(
                     return phone;
                 }
 
-                const prefix = '+ ' + numbers.at(0);
+                const prefix = '+ ' + numbers.charAt(0);
                 const areaCode = numbers.substring(1, 4);
                 const firstPart = numbers.substring(4, 7);
                 const lastPart = numbers.substring(7);
