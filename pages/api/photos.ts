@@ -6,7 +6,7 @@ export default async function list(req: NextApiRequest, res: NextApiResponse) {
             const response = await fetch(
                 `https://api.pexels.com/v1/search?size=small&query=${encodeURIComponent(
                     req.query.title
-                )}&per_page=12&orientation=landscape`,
+                )}&per_page=13&orientation=landscape`,
                 {
                     headers: {
                         Authorization: `Bearer ${process.env.PEXELS_API_KEY}`,
