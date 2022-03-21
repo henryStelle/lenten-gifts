@@ -104,7 +104,8 @@ const ListingSchema = new Schema<Listing>(
                 return [prefix, areaCode, firstPart, lastPart].join(' ');
             },
             validate: {
-                validator: (phone: string) => isMobilePhone(phone),
+                validator: (phone: string) =>
+                    isMobilePhone(phone.replace(/[^+0-9]/g, '')),
                 message: '{VALUE} is an invalid phone number',
             },
         },
