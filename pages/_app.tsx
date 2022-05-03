@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Head from 'next/head';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,7 +7,7 @@ import { generate } from '../utils/theme';
 import createEmotionCache from '../utils/createEmotionCache';
 import NavBar from '../components/NavBar';
 import { Toolbar, useMediaQuery } from '@mui/material';
-import { AppProps } from 'next/app';
+import type { AppProps } from 'next/app';
 import Footer from '../components/Footer';
 import AlertContext, { reducer } from '../contexts/Alert';
 import Notify from '../components/Notify';
@@ -25,11 +25,10 @@ export default function MyApp(
     } = props;
 
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    // const theme = React.useMemo(
-    //     () => generate(prefersDarkMode),
-    //     [prefersDarkMode]
-    // );
-    const theme = generate(prefersDarkMode);
+    const theme = React.useMemo(
+        () => generate(prefersDarkMode),
+        [prefersDarkMode]
+    );
     const [alert, dispatch] = React.useReducer(reducer, {
         message: '',
         severity: 'success',
@@ -45,7 +44,6 @@ export default function MyApp(
                     />
                 </Head>
                 <ThemeProvider theme={theme}>
-                    {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                     <CssBaseline />
                     <NavBar />
                     {/* this div provides a little extra padding below the navbar */}
