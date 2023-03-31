@@ -9,13 +9,14 @@ export default async function list(req: NextApiRequest, res: NextApiResponse) {
                 )}&per_page=13&orientation=landscape`,
                 {
                     headers: {
-                        Authorization: `Bearer ${process.env.PEXELS_API_KEY}`,
+                        Authorization: `${process.env.PEXELS_API_KEY}`,
                     },
                 }
             );
             if (!response.ok) {
                 const data = await response.json();
-                res.status(500).send(data);
+                console.log(data);
+                res.status(500).end();
             } else {
                 const data = await response.json();
                 res.status(200).send(data);
