@@ -14,7 +14,8 @@ export default async function list(req: NextApiRequest, res: NextApiResponse) {
                 }
             );
             if (!response.ok) {
-                res.status(500).end();
+                const data = await response.json();
+                res.status(500).send(data);
             } else {
                 const data = await response.json();
                 res.status(200).send(data);
