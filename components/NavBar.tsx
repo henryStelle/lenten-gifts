@@ -12,7 +12,7 @@ export default function NavBar() {
         <AppBar>
             <Toolbar>
                 <Typography variant='h6' sx={{ flexGrow: 1 }}>
-                    Easter {toTitleCase(type) || 'Programme'}s
+                    Easter {toTitleCase(type) ?? 'Programme'}s
                 </Typography>
                 {type && (
                     <>

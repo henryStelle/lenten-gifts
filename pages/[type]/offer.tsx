@@ -292,8 +292,8 @@ export default function Offer() {
 
                 <Typography paragraph>
                     {type === 'group'
-                        ? "Thank you for helping to build community at St. John's this Lent."
-                        : "Thank you for sharing your gift with St. John's this Lent."}
+                        ? "Thank you for helping to build community at St. John's this Easter."
+                        : "Thank you for sharing your gift with St. John's this Easter."}
                 </Typography>
 
                 <Button variant='contained' type={'submit'}>

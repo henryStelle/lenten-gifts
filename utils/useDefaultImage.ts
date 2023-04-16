@@ -5,11 +5,11 @@ export default function useDefaultImage() {
     const [defaultImage, setDefaultImage] = React.useState('');
 
     React.useEffect(() => {
-        setDefaultImage(`${window.location.origin}/default.jpg`);
+        setDefaultImage(`${window.location.origin}/easter_2023.jpg`);
     }, []);
 
     const defaultPhoto = {
-        alt: 'The default lenten image',
+        alt: 'The default easter image',
         avg_color: '#fff',
         height: 1,
         width: 1,
