@@ -165,6 +165,7 @@ export default function Manage() {
                                     name.startsWith('_') ? (
                                         <input
                                             type={'hidden'}
+                                            key={name}
                                             // @ts-ignore
                                             {...register(name)}
                                         />
