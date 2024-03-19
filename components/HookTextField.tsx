@@ -1,12 +1,13 @@
 import { TextField, TextFieldProps } from '@mui/material';
-import { Controller, FieldErrors, UseControllerProps } from 'react-hook-form';
+import { Controller, FieldValues, UseControllerProps } from 'react-hook-form';
 import { toTitleCase } from '../utils/toTitleCase';
 
-interface HookTextFieldProps<T> extends UseControllerProps<T> {
+interface HookTextFieldProps<T extends FieldValues>
+    extends UseControllerProps<T> {
     mui?: TextFieldProps;
 }
 
-export default function HookTextField<T>({
+export default function HookTextField<T extends FieldValues>({
     mui,
     ...props
 }: HookTextFieldProps<T>) {

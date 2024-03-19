@@ -118,7 +118,7 @@ const ListingSchema = new Schema<Listing>(
 
 // if the model has already been compiled, use that version, else compile for the first time (next.js issue)
 const ListingModel: Model<Listing> =
-    models.Listing || model<Listing>('Listing', ListingSchema);
+    models.Listing ?? model<Listing>('Listing', ListingSchema);
 
 Schema.Types.Boolean.convertToFalse.add('false');
 Schema.Types.Boolean.convertToTrue.add('true');

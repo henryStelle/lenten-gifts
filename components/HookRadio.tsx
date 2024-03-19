@@ -1,22 +1,20 @@
 import {
-    Checkbox,
     FormControlLabel,
     FormGroup,
     FormHelperText,
     FormLabel,
     Radio,
-    TextField,
     TextFieldProps,
 } from '@mui/material';
-import { Controller, FieldErrors, UseControllerProps } from 'react-hook-form';
+import { Controller, FieldValues, UseControllerProps } from 'react-hook-form';
 import { toTitleCase } from '../utils/toTitleCase';
 
-interface HookRadioProps<T> extends UseControllerProps<T> {
+interface HookRadioProps<T extends FieldValues> extends UseControllerProps<T> {
     mui?: TextFieldProps;
     options: string[];
 }
 
-export default function HookRadio<T>({
+export default function HookRadio<T extends FieldValues>({
     mui,
     options,
     ...props
