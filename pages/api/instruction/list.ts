@@ -5,11 +5,9 @@ import connectToMongo from '../../../utils/connectToMongo';
 export default async function list(req: NextApiRequest, res: NextApiResponse) {
     try {
         await connectToMongo();
-        const instructions = await InstructionModel.find();
-        if (instructions.length) {
-            res.status(200).send(
-                instructions.map((instruction) => instruction.toObject())
-            );
+        const instruction = await InstructionModel.findOne().sort({ _id: 1 });
+        if (instruction) {
+            res.status(200).send([instruction.toObject()]);
         } else {
             res.status(404).end();
         }

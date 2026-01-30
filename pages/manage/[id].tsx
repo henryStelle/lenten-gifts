@@ -1,14 +1,21 @@
 import React from 'react';
-import { Typography, Button, Skeleton, Grid, useTheme } from '@mui/material';
-import { ListingWithId } from '../../../models/Listing';
-import useQuery from '../../../utils/useQuery';
-import Layout from '../../../components/Layout';
+import {
+    Typography,
+    Button,
+    Skeleton,
+    Grid,
+    useTheme,
+    Stack,
+} from '@mui/material';
+import { ListingWithId } from '../../models/Listing';
+import useQuery from '../../utils/useQuery';
+import Layout from '../../components/Layout';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
-import HookTextField from '../../../components/HookTextField';
+import HookTextField from '../../components/HookTextField';
 import { useRouter } from 'next/router';
-import AlertContext from '../../../contexts/Alert';
-import ImageList, { PhotoSearch } from '../../../components/ImageList';
-import useDefaultImage from '../../../utils/useDefaultImage';
+import AlertContext from '../../contexts/Alert';
+import useDefaultImage from '../../utils/useDefaultImage';
+import HookImage from '../../components/HookImage';
 
 export default function Manage() {
     const router = useRouter();
@@ -22,12 +29,7 @@ export default function Manage() {
             mode: 'onTouched',
         });
     const { data, error, isLoading, mutate } = useQuery<ListingWithId>(
-        `/api/listing/${id}`
-    );
-    const photos = useQuery<PhotoSearch>(
-        watch('title')?.length > 4
-            ? `/api/photos?title=${encodeURIComponent(watch('title'))}`
-            : null
+        id ? `/api/listing/${id}` : null
     );
 
     React.useEffect(() => {
@@ -159,6 +161,7 @@ export default function Manage() {
                                             '__v',
                                             'isAvailable',
                                             'type',
+                                            'id',
                                         ].includes(name)
                                 )
                                 .map(([name, value]) =>
@@ -168,6 +171,14 @@ export default function Manage() {
                                             key={name}
                                             // @ts-ignore
                                             {...register(name)}
+                                        />
+                                    ) : name === 'image' ? (
+                                        <HookImage
+                                            key='image'
+                                            setImage={(image) =>
+                                                setValue('image', image)
+                                            }
+                                            {...register('image')}
                                         />
                                     ) : (
                                         <HookTextField<ListingWithId>
@@ -199,35 +210,28 @@ export default function Manage() {
                                 )}
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <Typography align={'center'}>
-                                {watch('title')?.length < 5
-                                    ? 'Please enter a title of at least 5 characters to preview images.'
-                                    : 'Please click on one of the following images to automatically set your listing image.'}
-                            </Typography>
-                            <ImageList
-                                sx={{ width: '100%', height: 420 }}
-                                cols={2}
-                                rowHeight={180}
-                                photos={[defaultImage].concat(
-                                    photos.data?.photos || []
-                                )}
-                                onPhotoClick={(photo) =>
-                                    setValue('image', photo.src.medium, {
-                                        shouldDirty: false,
-                                    })
-                                }
-                                selectedUrl={watch('image')}
-                                selectedItemStyle={{
-                                    border:
-                                        '4px solid ' +
-                                        theme.palette.primary.main,
-                                }}
-                                unselectedItemStyle={{
-                                    filter: 'grayscale(0.5)',
-                                }}
-                            >
-                                <p>Fallback</p>
-                            </ImageList>
+                            <Stack spacing={1} alignItems={'center'}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src={watch('image') || defaultImage.url}
+                                    alt={'Selected image'}
+                                    style={{
+                                        width: '100%',
+                                        objectFit: 'contain',
+                                        height: 140,
+                                    }}
+                                />
+                                <Typography
+                                    align={'center'}
+                                    variant='body2'
+                                    color='text.secondary'
+                                >
+                                    Preview of{' '}
+                                    {watch('image')
+                                        ? 'your selected image'
+                                        : 'default image'}
+                                </Typography>
+                            </Stack>
                         </Grid>
                     </Grid>
                 )}

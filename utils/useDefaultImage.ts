@@ -1,8 +1,7 @@
 import React from 'react';
-import { Photo } from '../components/ImageList';
 
 export default function useDefaultImage() {
-    const [defaultImage, setDefaultImage] = React.useState('');
+    const [defaultImage, setDefaultImage] = React.useState('/easter_2023.jpg');
 
     React.useEffect(() => {
         setDefaultImage(`${window.location.origin}/easter_2023.jpg`);
@@ -26,7 +25,7 @@ export default function useDefaultImage() {
             small: defaultImage,
             tiny: defaultImage,
         },
-    } as unknown as Photo;
+    };
 
     return defaultPhoto;
 }

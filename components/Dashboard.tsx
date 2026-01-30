@@ -40,7 +40,7 @@ export default function Dashboard({ data, keys, map, rename }: DashboardProps) {
                             ))}
                             <TableCell align='right'>
                                 <Button
-                                    href={`/${listing.type}/manage/${_id}`}
+                                    href={`/manage/${_id}`}
                                     target={'_blank'}
                                     variant={'outlined'}
                                 >

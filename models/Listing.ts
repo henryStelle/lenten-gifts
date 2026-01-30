@@ -4,17 +4,12 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
 
 export interface Listing {
     name: string;
-    type: string;
     isAvailable: boolean;
     title: string;
     description: string;
-    meetingDays?: string;
-    meetingTime?: string;
-    meetingInterval?: string;
     image?: string;
     email: string;
     phone: string;
-    vaccinationRequired: boolean;
 }
 
 export interface ListingWithId extends Listing {
@@ -29,11 +24,6 @@ const ListingSchema = new Schema<Listing>(
             minlength: 5,
             trim: true,
         },
-        type: {
-            required: true,
-            enum: ['gift', 'group'],
-            type: String,
-        },
         isAvailable: {
             default: true,
             type: Boolean,
@@ -46,28 +36,6 @@ const ListingSchema = new Schema<Listing>(
         },
         description: {
             required: true,
-            type: String,
-            trim: true,
-        },
-        meetingDays: {
-            required: function isRequired(this: Listing) {
-                return this.type === 'group';
-            },
-            type: String,
-            minlength: 3,
-            trim: true,
-        },
-        meetingTime: {
-            required: function isRequired(this: Listing) {
-                return this.type === 'group';
-            },
-            type: String,
-            trim: true,
-        },
-        meetingInterval: {
-            required: function isRequired(this: Listing) {
-                return this.type === 'group';
-            },
             type: String,
             trim: true,
         },
@@ -109,7 +77,6 @@ const ListingSchema = new Schema<Listing>(
                 message: '{VALUE} is an invalid phone number',
             },
         },
-        vaccinationRequired: Boolean,
     },
     {
         toObject: { versionKey: false, getters: true },

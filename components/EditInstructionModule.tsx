@@ -68,15 +68,6 @@ export default function EditInstructionModule(props: InstructionWithId) {
                     <input type={'hidden'} {...register('_id')} />
                     <HookTextField<InstructionWithId>
                         control={control}
-                        name={'type'}
-                        mui={{
-                            disabled: true,
-                            fullWidth: true,
-                            multiline: true,
-                        }}
-                    />
-                    <HookTextField<InstructionWithId>
-                        control={control}
                         name={'text'}
                         mui={{
                             fullWidth: true,

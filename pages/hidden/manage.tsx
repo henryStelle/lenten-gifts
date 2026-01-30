@@ -76,7 +76,7 @@ export default function Manage() {
             {type == 'listing' && data && (
                 <Dashboard
                     data={filtered as ListingWithId[]}
-                    keys={['title', 'type', 'name', 'email', 'isAvailable']}
+                    keys={['title', 'name', 'email', 'isAvailable']}
                     map={(key, value) =>
                         key == 'isAvailable' ? (value ? 'Yes' : 'No') : value
                     }

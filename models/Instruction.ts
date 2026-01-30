@@ -1,7 +1,6 @@
 import { Schema, model, models, Model } from 'mongoose';
 
 export interface Instruction {
-    type: 'group' | 'gift';
     text: string;
 }
 
@@ -11,12 +10,6 @@ export interface InstructionWithId extends Instruction {
 
 const InstructionSchema = new Schema<Instruction>(
     {
-        type: {
-            type: String,
-            enum: ['group', 'gift'],
-            lowercase: true,
-            required: true,
-        },
         text: {
             type: String,
             required: true,

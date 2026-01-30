@@ -73,26 +73,6 @@ export default function Listing(props: ListingWithId) {
                             {props.description}
                         </Typography>
                         <Divider sx={{ marginY: 1 }} />
-                        {props.type === 'group' && (
-                            <>
-                                {props.vaccinationRequired && (
-                                    <Typography variant='body2' gutterBottom>
-                                        Important:{' '}
-                                        <Typography
-                                            variant='body2'
-                                            component={'span'}
-                                            color={'error'}
-                                        >
-                                            Vaccination Required
-                                        </Typography>
-                                    </Typography>
-                                )}
-                                <Typography variant='body2'>
-                                    When: {props.meetingDays},{' '}
-                                    {props.meetingTime}, {props.meetingInterval}
-                                </Typography>
-                            </>
-                        )}
                         <Typography variant='body2'>
                             Contact:{' '}
                             <Link href={`tel:${props.phone}`}>
