@@ -14,7 +14,7 @@ export default function useQuery<T>(
         fetcher(url, options)
     );
     return {
-        data,
+        data: data as T,
         error,
         isLoading,
         mutate,
