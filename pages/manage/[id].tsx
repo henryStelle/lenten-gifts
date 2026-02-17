@@ -1,12 +1,5 @@
-import React from 'react';
-import {
-    Typography,
-    Button,
-    Skeleton,
-    Grid,
-    useTheme,
-    Stack,
-} from '@mui/material';
+import React, { useMemo } from 'react';
+import { Typography, Button, Skeleton, Grid, Stack } from '@mui/material';
 import { ListingWithId } from '../../models/Listing';
 import useQuery from '../../utils/useQuery';
 import Layout from '../../components/Layout';
@@ -14,29 +7,33 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import HookTextField from '../../components/HookTextField';
 import { useRouter } from 'next/router';
 import AlertContext from '../../contexts/Alert';
-import useDefaultImage from '../../utils/useDefaultImage';
+import { defaultImage } from '../../utils/useDefaultImage';
 import HookImage from '../../components/HookImage';
 
 export default function Manage() {
     const router = useRouter();
-    const theme = useTheme();
     const id = router.query.id as string | undefined;
     const dispatch = React.useContext(AlertContext);
-    const defaultImage = useDefaultImage();
 
     const { control, handleSubmit, reset, watch, setValue, register } =
         useForm<ListingWithId>({
             mode: 'onTouched',
         });
-    const { data, error, isLoading, mutate } = useQuery<ListingWithId>(
-        id ? `/api/listing/${id}` : null
-    );
 
+    const url = useMemo(() => {
+        const url = id ? `/api/listing/${id}` : null;
+        return url;
+    }, [id]);
+    const { data, error, isLoading, mutate } = useQuery<ListingWithId>(url);
+
+    const dataId = data?._id;
     React.useEffect(() => {
-        if (data?._id) {
+        if (dataId) {
+            console.log('resetting form with data', dataId);
             reset(data);
         }
-    }, [data, reset]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dataId, reset]);
 
     const onSubmit: SubmitHandler<ListingWithId> = async (form) => {
         await handleApiRequest(form);

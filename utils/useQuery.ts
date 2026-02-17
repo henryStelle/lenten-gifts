@@ -10,13 +10,13 @@ export default function useQuery<T>(
     url: string | null,
     options: RequestInit = {}
 ) {
-    const { data, error, isValidating, mutate } = useSWR(url, (url) =>
+    const { data, error, isLoading, mutate } = useSWR(url, (url) =>
         fetcher(url, options)
     );
     return {
-        data: isValidating ? undefined : (data as T),
-        error: isValidating ? undefined : error,
-        isLoading: isValidating,
+        data,
+        error,
+        isLoading,
         mutate,
     };
 }

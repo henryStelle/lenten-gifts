@@ -15,7 +15,7 @@ import HookTextField from '../components/HookTextField';
 import Layout from '../components/Layout';
 import AlertContext from '../contexts/Alert';
 import { ListingWithId } from '../models/Listing';
-import useDefaultImage from '../utils/useDefaultImage';
+import { defaultImage } from '../utils/useDefaultImage';
 import HookImage from '../components/HookImage';
 
 export default function Offer() {
@@ -24,7 +24,6 @@ export default function Offer() {
         useForm<ListingWithId>({
             mode: 'onTouched',
         });
-    const defaultImage = useDefaultImage();
     const dispatch = React.useContext(AlertContext);
     const isUsingDefaultImage = !watch('image');
 
